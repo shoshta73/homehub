@@ -24,6 +24,8 @@ COPY ./frontend/vite.config.ts ./vite.config.ts
 COPY ./frontend/tsconfig.json ./tsconfig.json
 COPY ./frontend/tsconfig.app.json ./tsconfig.app.json
 COPY ./frontend/tsconfig.node.json ./tsconfig.node.json
+COPY ./frontend/postcss.config.js ./postcss.config.js
+COPY ./frontend/tailwind.config.js ./tailwind.config.js
 
 COPY ./frontend/index.html ./index.html
 COPY ./frontend/public ./public
