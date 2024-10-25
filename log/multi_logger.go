@@ -30,6 +30,7 @@ func newMultiLogger(writers []io.Writer) *multiLogger {
 		ml.loggers[i].SetLevel(charmLogger.DebugLevel)
 		ml.loggers[i].SetReportTimestamp(true)
 		ml.loggers[i].SetTimeFormat(timeFormat)
+		ml.loggers[i].SetStyles(style)
 	}
 
 	return ml
