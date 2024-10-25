@@ -1,5 +1,5 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
-import HomeView from "./views/HomeVIew";
+import HomeView from "./views/HomeView";
 
 const Wrapper = () => (
   <div className="flex flex-col min-h-screen h-screen max-h-screen">
