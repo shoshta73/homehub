@@ -1,5 +1,5 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
-import { Button } from "./components/ui/button";
+import HomeView from "./views/HomeVIew";
 
 const Wrapper = () => (
   <div className="flex flex-col min-h-screen h-screen max-h-screen">
@@ -14,12 +14,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <>
-            <h1 className="text-3xl font-bold underline">Hello from HomeHub!</h1>
-            <Button>Click me</Button>
-          </>
-        ),
+        element: <HomeView />,
       },
     ],
   },
