@@ -9,7 +9,10 @@ import (
 	charmLogger "github.com/charmbracelet/log"
 )
 
-const noLevel charmLogger.Level = math.MaxInt32
+const (
+	noLevel    charmLogger.Level = math.MaxInt32
+	timeFormat                   = "06-01-02 15:04:05.000000"
+)
 
 type multiLogger struct {
 	loggers []*charmLogger.Logger
@@ -25,6 +28,7 @@ func newMultiLogger(writers []io.Writer) *multiLogger {
 		ml.writers[i] = w
 		ml.loggers[i] = charmLogger.New(w)
 		ml.loggers[i].SetReportTimestamp(true)
+		ml.loggers[i].SetTimeFormat(timeFormat)
 	}
 
 	return ml
