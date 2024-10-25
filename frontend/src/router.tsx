@@ -3,6 +3,7 @@ import HomeView from "./views/HomeView";
 import { lazy, Suspense } from "react";
 
 const RegisterView = lazy(() => import("./views/RegisterView"));
+const LoginView = lazy(() => import("./views/LoginView"));
 
 const Wrapper = () => (
   <div className="flex flex-col min-h-screen h-screen max-h-screen">
@@ -24,6 +25,10 @@ const router = createHashRouter([
       {
         path: "register",
         element: <RegisterView />,
+      },
+      {
+        path: "login",
+        element: <LoginView />,
       },
     ],
   },

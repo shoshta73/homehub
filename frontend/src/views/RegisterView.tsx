@@ -59,9 +59,9 @@ function RegisterView() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-full">
+    <div className="flex flex-col items-center justify-center h-full w-full">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
           <FormField
             control={form.control}
             name="username"
