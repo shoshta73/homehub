@@ -17,20 +17,21 @@ FROM base AS builder
 
 WORKDIR /app
 
-COPY  ./frontend/package.json ./frontend/yarn.lock* ./frontend/package-lock.json* ./frontend/pnpm-lock.yaml* ./
-COPY --from=deps /app/node_modules ./node_modules
-
 COPY ./frontend/vite.config.ts ./vite.config.ts
 COPY ./frontend/tsconfig.json ./tsconfig.json
 COPY ./frontend/tsconfig.app.json ./tsconfig.app.json
 COPY ./frontend/tsconfig.node.json ./tsconfig.node.json
 COPY ./frontend/postcss.config.js ./postcss.config.js
 COPY ./frontend/tailwind.config.js ./tailwind.config.js
+COPY ./frontend/components.json ./components.json
 
 COPY ./frontend/index.html ./index.html
 COPY ./frontend/public ./public
 
 COPY ./frontend/src ./src
+
+COPY  ./frontend/package.json ./frontend/yarn.lock* ./frontend/package-lock.json* ./frontend/pnpm-lock.yaml* ./
+COPY --from=deps /app/node_modules ./node_modules
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
