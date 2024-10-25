@@ -25,6 +25,12 @@ export default defineConfig({
     }),
   ],
 
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+
   build: {
     rollupOptions: {
       output: {
@@ -33,14 +39,11 @@ export default defineConfig({
           "react-dom": ["react-dom", "react-dom/client"],
           "tailwind-merge": ["tailwind-merge"],
           "react-router": ["react-router-dom"],
+          icons: ["@radix-ui/react-icons", "lucide-react"],
+          ui: ["./src/components/ui/button.tsx", "./src/components/ui/menubar.tsx"],
+          zustand: ["zustand", "zustand/middleware"],
         },
       },
-    },
-  },
-
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
     },
   },
 });
