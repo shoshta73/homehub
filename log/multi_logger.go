@@ -31,6 +31,7 @@ func newMultiLogger(writers []io.Writer) *multiLogger {
 		ml.loggers[i].SetReportTimestamp(true)
 		ml.loggers[i].SetTimeFormat(timeFormat)
 		ml.loggers[i].SetStyles(style)
+		ml.loggers[i].SetReportCaller(true)
 	}
 
 	return ml
