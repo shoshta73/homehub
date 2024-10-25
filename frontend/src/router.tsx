@@ -1,5 +1,6 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import HomeView from "./views/HomeView";
+import RegisterView from "./views/RegisterView";
 
 const Wrapper = () => (
   <div className="flex flex-col min-h-screen h-screen max-h-screen">
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomeView />,
+      },
+      {
+        path: "register",
+        element: <RegisterView />,
       },
     ],
   },
