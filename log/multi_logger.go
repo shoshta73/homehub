@@ -27,6 +27,7 @@ func newMultiLogger(writers []io.Writer) *multiLogger {
 	for i, w := range writers {
 		ml.writers[i] = w
 		ml.loggers[i] = charmLogger.New(w)
+		ml.loggers[i].SetLevel(charmLogger.DebugLevel)
 		ml.loggers[i].SetReportTimestamp(true)
 		ml.loggers[i].SetTimeFormat(timeFormat)
 	}
