@@ -1,14 +1,18 @@
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { createHashRouter, Outlet } from "react-router-dom";
 import HomeView from "./views/HomeView";
-import RegisterView from "./views/RegisterView";
+import { lazy, Suspense } from "react";
+
+const RegisterView = lazy(() => import("./views/RegisterView"));
 
 const Wrapper = () => (
   <div className="flex flex-col min-h-screen h-screen max-h-screen">
-    <Outlet />
+    <Suspense fallback={<div>Loading...</div>}>
+      <Outlet />
+    </Suspense>
   </div>
 );
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Wrapper />,
