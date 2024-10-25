@@ -26,12 +26,11 @@ COPY ./frontend/tailwind.config.js ./tailwind.config.js
 COPY ./frontend/components.json ./components.json
 
 COPY ./frontend/index.html ./index.html
-COPY ./frontend/public ./public
-
-COPY ./frontend/src ./src
-
 COPY  ./frontend/package.json ./frontend/yarn.lock* ./frontend/package-lock.json* ./frontend/pnpm-lock.yaml* ./
 COPY --from=deps /app/node_modules ./node_modules
+
+COPY ./frontend/public ./public
+COPY ./frontend/src ./src
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \

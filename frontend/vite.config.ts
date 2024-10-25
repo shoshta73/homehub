@@ -32,6 +32,7 @@ export default defineConfig({
           react: ["react", "react/jsx-runtime"],
           "react-dom": ["react-dom", "react-dom/client"],
           "tailwind-merge": ["tailwind-merge"],
+          "react-router": ["react-router-dom"],
         },
       },
     },
