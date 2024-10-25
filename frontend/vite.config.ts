@@ -25,6 +25,18 @@ export default defineConfig({
     }),
   ],
 
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react/jsx-runtime"],
+          "react-dom": ["react-dom", "react-dom/client"],
+          "tailwind-merge": ["tailwind-merge"],
+        },
+      },
+    },
+  },
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
