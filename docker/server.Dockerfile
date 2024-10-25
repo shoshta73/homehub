@@ -11,7 +11,10 @@ RUN apk add --no-cache musl-dev
 COPY go.mod go.sum ./
 RUN go mod download
 
+COPY ./log ./log
 COPY ./exec/server/main.go ./
+
+RUN go mod tidy
 
 RUN go build -v -race -o /app/server .
 

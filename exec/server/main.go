@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/shoshta73/homehub/log"
 )
 
 func main() {
@@ -18,5 +19,6 @@ func main() {
 		return c.String(200, "Hello, world!")
 	})
 
+	log.Info("Starting server")
 	e.Start(":3000")
 }
