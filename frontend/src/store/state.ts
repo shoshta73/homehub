@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-type State = {
+export type State = {
   mode: "light" | "dark";
 };
 
-interface StateAction {
+export interface StateAction {
   toggleMode: () => void;
 }
 
