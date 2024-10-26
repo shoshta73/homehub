@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 
 const loginSchema = z.object({
-  username: z.string().min(3).max(50).optional(),
+  username: z.string().max(50).optional(),
   email: z.string().email().optional(),
   password: z.string().min(8),
 });
@@ -27,7 +27,20 @@ function RegisterView() {
   });
 
   function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log(values);
+    fetch(`/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+      .then((res) => res.text())
+      .then((text) => {
+        if (text == "OK") {
+          navigate("/home");
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   return (

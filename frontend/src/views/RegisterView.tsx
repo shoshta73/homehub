@@ -55,7 +55,20 @@ function RegisterView() {
       return;
     }
 
-    console.log(values);
+    fetch(`/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+      .then((res) => res.text())
+      .then((text) => {
+        if (text == "OK") {
+          navigate("/home");
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   return (
