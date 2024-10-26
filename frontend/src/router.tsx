@@ -6,7 +6,7 @@ const RegisterView = lazy(() => import("./views/RegisterView"));
 const LoginView = lazy(() => import("./views/LoginView"));
 
 const Wrapper = () => (
-  <div className="flex flex-col min-h-screen h-screen max-h-screen">
+  <div className="flex flex-col min-h-screen h-screen max-h-screen" data-testid="wrapper">
     <Suspense fallback={<div>Loading...</div>}>
       <Outlet />
     </Suspense>
