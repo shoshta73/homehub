@@ -1,0 +1,36 @@
+{
+  "git": {
+    "commit": false,
+    "tag": false,
+    "push": false
+  },
+  "github": {
+    "release": false
+  },
+  "npm": {
+    "publish": false
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "infile": "docs/changes.md",
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          {
+            "type": "breaking",
+            "section": "Breaking Changes"
+          },
+          {
+            "type": "feat",
+            "section": "Features"
+          },
+          {
+            "type": "fix",
+            "section": "Bug Fixes"
+          },
+          {}
+        ]
+      }
+    }
+  }
+}
