@@ -46,17 +46,17 @@ function RegisterView() {
   return (
     <div className="flex flex-col flex-grow items-center justify-center">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96" data-testid="login-form">
           <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
+              <FormItem data-testid="username-field">
+                <FormLabel data-testid="username-label">Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="username" {...field} />
+                  <Input placeholder="username" {...field} data-testid="username-input" />
                 </FormControl>
-                <FormDescription>This is your username name.</FormDescription>
+                <FormDescription data-testid="username-description">This is your username name.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -66,12 +66,12 @@ function RegisterView() {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
+              <FormItem data-testid="email-field">
+                <FormLabel data-testid="email-label">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="email" {...field} />
+                  <Input placeholder="email" {...field} data-testid="email-input" />
                 </FormControl>
-                <FormDescription>This is your email address.</FormDescription>
+                <FormDescription data-testid="email-description">This is your email address.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -81,12 +81,12 @@ function RegisterView() {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
+              <FormItem data-testid="password-field">
+                <FormLabel data-testid="password-label">Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="password" {...field} />
+                  <Input type="password" placeholder="password" {...field} data-testid="password-input" />
                 </FormControl>
-                <FormDescription>This is your password.</FormDescription>
+                <FormDescription data-testid="password-description">This is your password.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -94,12 +94,17 @@ function RegisterView() {
 
           <div>
             <Label>Dont have an account?</Label>
-            <Button type="button" className="w-full" onClick={() => navigate("/register")}>
+            <Button
+              type="button"
+              className="w-full"
+              onClick={() => navigate("/register")}
+              data-testid="register-button"
+            >
               Register
             </Button>
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" data-testid="submit-button">
             Login
           </Button>
         </form>
