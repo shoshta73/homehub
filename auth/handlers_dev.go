@@ -50,6 +50,8 @@ func Register(c echo.Context) error {
 		return err
 	}
 
+	go user.GenerateIdenticon(user.User{Username: body.Username, Avatar: usr.Avatar})
+
 	log.Info("User registered")
 
 	tkn, err := usr.GetClaims().GenerateToken()
