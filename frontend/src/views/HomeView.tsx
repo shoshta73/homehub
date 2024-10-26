@@ -10,7 +10,7 @@ function HomeView() {
 
   return (
     <>
-      <Menubar className="h-14">
+      <Menubar className="h-14" id="menubar" data-testid="menubar">
         <div className="flex-grow h-auto" id="menubar-spacer" />
 
         <MenubarMenu>
@@ -20,17 +20,19 @@ function HomeView() {
               className="my-1 px-1 py-1 h-12 flex flex-row text-base [&_svg]:size-6"
               variant={"outline"}
               onClick={() => navigate("/register")}
+              data-testid="register-button"
             >
-              <UserIcon />
-              <p>Register</p>
+              <UserIcon data-testid="register-icon" />
+              <p data-testid="register-text">Register</p>
             </Button>
             <Button
               className="my-1 px-1 py-1 h-12 flex flex-row text-base [&_svg]:size-6"
               variant={"outline"}
               onClick={() => navigate("/login")}
+              data-testid="login-button"
             >
-              <LogIn />
-              <p>Login</p>
+              <LogIn data-testid="login-icon" />
+              <p data-testid="login-text">Login</p>
             </Button>
           </>
         </MenubarMenu>
@@ -40,8 +42,9 @@ function HomeView() {
             className="my-1 px-1 py-1 w-12 h-12 flex flex-row text-base [&_svg]:size-6"
             variant={"outline"}
             onClick={state.toggleMode}
+            data-testid="mode-button"
           >
-            {state.mode === "light" ? <MoonIcon /> : <SunIcon />}
+            {state.mode === "light" ? <MoonIcon data-testid="mode-icon" /> : <SunIcon data-testid="mode-icon" />}
           </Button>
         </MenubarMenu>
       </Menubar>
