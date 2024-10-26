@@ -24,6 +24,7 @@ func main() {
 	})
 
 	e.POST("/auth/register", auth.Register)
+	e.POST("/auth/login", auth.Login)
 
 	log.Info("Starting server")
 	err := e.Start(":3000")

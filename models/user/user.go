@@ -1,6 +1,7 @@
 package user
 
 import (
+	"crypto/rand"
 	"crypto/sha512"
 	"database/sql"
 	"strconv"
@@ -9,6 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"xorm.io/xorm"
 
@@ -18,7 +20,9 @@ import (
 )
 
 const dataDir = "data"
+const secretsDir = "secrets"
 const databaseFile = "homehub.db"
+const tokenFile = "token.txt"
 
 var orm *xorm.Engine
 
@@ -34,8 +38,45 @@ type User struct {
 	UpdatedAt   time.Time
 }
 
-func (User) TableName() string {
+type UserClaims struct {
+	Id          int64  `json:"id"`
+	Username    string `json:"username"`
+	Permissions uint8  `json:"permissions"`
+	jwt.RegisteredClaims
+}
+
+func (uc UserClaims) GenerateToken() (string, error) {
+	data, err := os.ReadFile(filepath.Join(secretsDir, tokenFile))
+	if err != nil {
+		return "", err
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, uc)
+	return token.SignedString([]byte(data))
+}
+
+func (u User) TableName() string {
 	return "users"
+}
+
+func (u User) GetClaims() *UserClaims {
+	tn := time.Now()
+	return &UserClaims{
+		Id:          u.Id,
+		Username:    u.Username,
+		Permissions: u.Permissions,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer: "homehub",
+			ExpiresAt: &jwt.NumericDate{
+				Time: time.Now().Add(time.Hour * 24 * 3),
+			},
+			IssuedAt: &jwt.NumericDate{
+				Time: tn,
+			},
+			NotBefore: &jwt.NumericDate{
+				Time: tn,
+			},
+		},
+	}
 }
 
 func (u *User) BeforeInsert() {
@@ -91,6 +132,15 @@ func init() {
 		}
 	}
 
+	_, err = os.Stat(secretsDir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			os.Mkdir(secretsDir, 0755)
+		} else {
+			log.Fatal(err)
+		}
+	}
+
 	created := false
 	_, err = os.Stat(filepath.Join(dataDir, databaseFile))
 	if err != nil {
@@ -134,6 +184,30 @@ func init() {
 	}
 
 	orm = engine
+
+	created = false
+	_, err = os.Stat(filepath.Join(secretsDir, tokenFile))
+	if err != nil {
+		if os.IsNotExist(err) {
+			f, err := os.Create(filepath.Join(secretsDir, tokenFile))
+			if err != nil {
+				log.Fatal(err)
+			}
+			f.Close()
+			created = true
+		} else {
+			log.Fatal(err)
+		}
+	}
+
+	if created {
+		token := make([]byte, 64)
+		rand.Read(token)
+		err = os.WriteFile(filepath.Join(secretsDir, tokenFile), token, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
 
 func CreateUser(username, name, email, pass string) (*User, error) {
@@ -190,4 +264,37 @@ func VerifyUser(username, email, pass string) bool {
 	}
 
 	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
+}
+
+func GetUserById(id int64) (*User, error) {
+	user := &User{}
+
+	_, err := orm.Where("id = ?", id).Get(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func GetUserByUsername(username string) (*User, error) {
+	user := &User{}
+
+	_, err := orm.Where("username = ?", username).Get(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func GetUserByEmail(email string) (*User, error) {
+	user := &User{}
+
+	_, err := orm.Where("email = ?", email).Get(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

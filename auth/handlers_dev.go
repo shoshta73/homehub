@@ -1,5 +1,5 @@
-//go:build !dev
-// +build !dev
+//go:build dev
+// +build dev
 
 package auth
 
@@ -62,7 +62,6 @@ func Register(c echo.Context) error {
 		Value:    tkn,
 		Expires:  time.Now().Add(time.Hour * 24 * 3),
 		HttpOnly: true,
-		Secure:   true,
 		Path:     "/",
 	}
 
@@ -103,7 +102,6 @@ func Login(c echo.Context) error {
 		Value:    tkn,
 		Expires:  time.Now().Add(time.Hour * 24 * 3),
 		HttpOnly: true,
-		Secure:   true,
 		Path:     "/",
 	}
 
