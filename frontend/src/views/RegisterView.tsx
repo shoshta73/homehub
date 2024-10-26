@@ -74,12 +74,12 @@ function RegisterView() {
   return (
     <div className="flex flex-col items-center justify-center h-full w-full">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-96" data-testid="register-form">
           <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
-              <FormItem>
+              <FormItem data-testid="username-field">
                 <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input placeholder="username" {...field} />
@@ -94,7 +94,7 @@ function RegisterView() {
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem>
+              <FormItem data-testid="name-field">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input placeholder="name" {...field} />
@@ -111,7 +111,7 @@ function RegisterView() {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
+              <FormItem data-testid="email-field">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input placeholder="email" {...field} />
@@ -126,7 +126,7 @@ function RegisterView() {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
+              <FormItem data-testid="password-field">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="password" {...field} />
@@ -141,7 +141,7 @@ function RegisterView() {
             control={form.control}
             name="confirmPassword"
             render={({ field }) => (
-              <FormItem>
+              <FormItem data-testid="confirm-password-field">
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="confirm password" {...field} />
@@ -154,12 +154,12 @@ function RegisterView() {
 
           <div>
             <Label>Already have an account?</Label>
-            <Button type="button" className="w-full" onClick={() => navigate("/login")}>
+            <Button type="button" className="w-full" onClick={() => navigate("/login")} data-testid="login-button">
               Login
             </Button>
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" data-testid="register-button">
             Register
           </Button>
         </form>
