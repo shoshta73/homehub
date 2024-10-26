@@ -1,8 +1,12 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	"github.com/shoshta73/homehub/auth"
 	"github.com/shoshta73/homehub/log"
 )
 
@@ -16,9 +20,14 @@ func main() {
 	e.Use(middleware.Recover())
 
 	e.GET("/", func(c echo.Context) error {
-		return c.String(200, "Hello, world!")
+		return c.String(http.StatusOK, "Hello, world!")
 	})
 
+	e.POST("/auth/register", auth.Register)
+
 	log.Info("Starting server")
-	e.Start(":3000")
+	err := e.Start(":3000")
+	if err != nil {
+		log.Fatal(err)
+	}
 }

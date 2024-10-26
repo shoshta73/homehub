@@ -12,6 +12,8 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY ./log ./log
+COPY ./auth ./auth
+COPY ./models ./models
 COPY ./exec/server/main.go ./
 
 RUN go mod tidy
