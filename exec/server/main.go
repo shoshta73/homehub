@@ -2,6 +2,8 @@ package main
 
 import (
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -10,8 +12,17 @@ import (
 	"github.com/shoshta73/homehub/log"
 )
 
+var liveCertDir string
+
+func init() {
+	liveCertDir = os.Getenv("LIVE_CERT")
+}
+
 func main() {
 	e := echo.New()
+
+	e.Pre(middleware.HTTPSRedirect())
+	e.Pre(middleware.RemoveTrailingSlash())
 
 	e.HideBanner = true
 	e.HidePort = true
@@ -19,15 +30,31 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, world!")
-	})
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		Skipper:    nil,
+		Root:       "dist",
+		Index:      "index.html",
+		HTML5:      true,
+		Browse:     false,
+		IgnoreBase: false,
+		Filesystem: nil,
+	}))
+
+	certFile := filepath.Join(liveCertDir, "fullchain.pem")
+	keyFile := filepath.Join(liveCertDir, "privkey.pem")
 
 	e.POST("/auth/register", auth.Register)
 	e.POST("/auth/login", auth.Login)
 
 	log.Info("Starting server")
-	err := e.Start(":3000")
+
+	go func() {
+		if err := e.Start(":80"); err != nil && err != http.ErrServerClosed {
+			log.Fatal("HTTP server failed:", err)
+		}
+	}()
+
+	err := e.StartTLS(":443", certFile, keyFile)
 	if err != nil {
 		log.Fatal(err)
 	}
