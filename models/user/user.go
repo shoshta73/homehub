@@ -23,7 +23,7 @@ import (
 )
 
 const secretsDir = "secrets"
-const databaseFile = "homehub.db"
+
 const tokenFile = "token.txt"
 
 var orm *xorm.Engine
@@ -159,10 +159,10 @@ func init() {
 	}
 
 	created := false
-	_, err = os.Stat(filepath.Join(constants.DATA_DIR, databaseFile))
+	_, err = os.Stat(filepath.Join(constants.DATA_DIR, constants.DATABASE_FILE))
 	if err != nil {
 		if os.IsNotExist(err) {
-			f, err := os.Create(filepath.Join(constants.DATA_DIR, databaseFile))
+			f, err := os.Create(filepath.Join(constants.DATA_DIR, constants.DATABASE_FILE))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -174,7 +174,7 @@ func init() {
 	}
 
 	if created {
-		db, err := sql.Open("sqlite3", filepath.Join(constants.DATA_DIR, databaseFile))
+		db, err := sql.Open("sqlite3", filepath.Join(constants.DATA_DIR, constants.DATABASE_FILE))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -190,7 +190,7 @@ func init() {
 		}
 	}
 
-	engine, err := xorm.NewEngine("sqlite3", filepath.Join(constants.DATA_DIR, databaseFile))
+	engine, err := xorm.NewEngine("sqlite3", filepath.Join(constants.DATA_DIR, constants.DATABASE_FILE))
 	if err != nil {
 		log.Fatal(err)
 	}

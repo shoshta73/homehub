@@ -8,6 +8,8 @@ import (
 
 const DATA_DIR string = "data"
 
+const DATABASE_FILE string = "homehub.db"
+
 func init() {
 	_, err := os.Stat(DATA_DIR)
 	if err != nil {

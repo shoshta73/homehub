@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/shoshta73/homehub/log"
+	"github.com/shoshta73/homehub/models/stats"
 	"github.com/shoshta73/homehub/models/user"
 )
 
@@ -59,6 +60,8 @@ func Register(c echo.Context) error {
 		return err
 	}
 
+	go stats.InitUserStats(usr.Id)
+
 	cookie := http.Cookie{
 		Name:     "token",
 		Value:    tkn,
@@ -99,6 +102,8 @@ func Login(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+
+	go stats.CheckUserStats(usr.Id)
 
 	cookie := http.Cookie{
 		Name:     "token",
