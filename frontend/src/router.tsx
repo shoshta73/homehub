@@ -1,9 +1,10 @@
-import { createHashRouter, Outlet } from "react-router-dom";
+import { createBrowserRouter, Outlet } from "react-router-dom";
 import HomeView from "./views/HomeView";
 import { lazy, Suspense } from "react";
 
 const RegisterView = lazy(() => import("./views/RegisterView"));
 const LoginView = lazy(() => import("./views/LoginView"));
+const UserHomeView = lazy(() => import("./views/UserHomeView"));
 
 const Wrapper = () => (
   <div className="flex flex-col min-h-screen h-screen max-h-screen" data-testid="wrapper">
@@ -13,7 +14,7 @@ const Wrapper = () => (
   </div>
 );
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Wrapper />,
@@ -29,6 +30,10 @@ const router = createHashRouter([
       {
         path: "login",
         element: <LoginView />,
+      },
+      {
+        path: "home",
+        element: <UserHomeView />,
       },
     ],
   },
