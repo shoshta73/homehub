@@ -15,12 +15,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"xorm.io/xorm"
 
+	"github.com/shoshta73/homehub/constants"
 	"github.com/shoshta73/homehub/log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const dataDir = "data"
 const secretsDir = "secrets"
 const databaseFile = "homehub.db"
 const tokenFile = "token.txt"
@@ -64,7 +64,7 @@ func (u User) GetAvatarURL() string {
 }
 
 func (u User) GetAvatar() string {
-	return filepath.Join(dataDir, "identicons", u.Username+".png")
+	return filepath.Join(constants.DATA_DIR, "identicons", u.Username+".png")
 }
 
 func (u User) GetClaims() *UserClaims {
@@ -132,16 +132,7 @@ func IsExistingByUsername(username string) (bool, error) {
 }
 
 func init() {
-	_, err := os.Stat(dataDir)
-	if err != nil {
-		if os.IsNotExist(err) {
-			os.Mkdir(dataDir, 0755)
-		} else {
-			log.Fatal(err)
-		}
-	}
-
-	_, err = os.Stat(secretsDir)
+	_, err := os.Stat(secretsDir)
 	if err != nil {
 		if os.IsNotExist(err) {
 			os.Mkdir(secretsDir, 0755)
@@ -151,10 +142,10 @@ func init() {
 	}
 
 	created := false
-	_, err = os.Stat(filepath.Join(dataDir, databaseFile))
+	_, err = os.Stat(filepath.Join(constants.DATA_DIR, databaseFile))
 	if err != nil {
 		if os.IsNotExist(err) {
-			f, err := os.Create(filepath.Join(dataDir, databaseFile))
+			f, err := os.Create(filepath.Join(constants.DATA_DIR, databaseFile))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -166,7 +157,7 @@ func init() {
 	}
 
 	if created {
-		db, err := sql.Open("sqlite3", filepath.Join(dataDir, databaseFile))
+		db, err := sql.Open("sqlite3", filepath.Join(constants.DATA_DIR, databaseFile))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -182,7 +173,7 @@ func init() {
 		}
 	}
 
-	engine, err := xorm.NewEngine("sqlite3", filepath.Join(dataDir, databaseFile))
+	engine, err := xorm.NewEngine("sqlite3", filepath.Join(constants.DATA_DIR, databaseFile))
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/shoshta73/homehub/constants"
 	"github.com/shoshta73/homehub/log"
 )
 
@@ -43,16 +44,16 @@ func GenerateIdenticon(u User) error {
 		}
 	}
 
-	_, err := os.Stat(filepath.Join(dataDir, "identicons"))
+	_, err := os.Stat(filepath.Join(constants.DATA_DIR, "identicons"))
 	if err != nil {
 		if os.IsNotExist(err) {
-			os.Mkdir(filepath.Join(dataDir, "identicons"), 0755)
+			os.Mkdir(filepath.Join(constants.DATA_DIR, "identicons"), 0755)
 		} else {
 			return err
 		}
 	}
 
-	outFile, err := os.Create(filepath.Join(dataDir, "identicons", u.Username+".png"))
+	outFile, err := os.Create(filepath.Join(constants.DATA_DIR, "identicons", u.Username+".png"))
 	if err != nil {
 		return err
 	}
