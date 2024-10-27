@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/sha512"
 	"database/sql"
+	"fmt"
 	"strconv"
 
 	"os"
@@ -56,6 +57,14 @@ func (uc UserClaims) GenerateToken() (string, error) {
 
 func (u User) TableName() string {
 	return "users"
+}
+
+func (u User) GetAvatarURL() string {
+	return filepath.Join("avatars", u.Username+".png")
+}
+
+func (u User) GetAvatar() string {
+	return filepath.Join(dataDir, "identicons", u.Username+".png")
 }
 
 func (u User) GetClaims() *UserClaims {
@@ -292,6 +301,38 @@ func GetUserByEmail(email string) (*User, error) {
 	user := &User{}
 
 	_, err := orm.Where("email = ?", email).Get(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func getUserByToken(token string) (*User, error) {
+	user := &User{}
+
+	log.Info("Getting user by token", "token", token)
+
+	tokenClaims, err := jwt.ParseWithClaims(token, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return os.ReadFile(filepath.Join(secretsDir, tokenFile))
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := tokenClaims.Claims.(*UserClaims)
+	if !ok {
+		return nil, fmt.Errorf("invalid claims")
+	}
+
+	log.Info("Getting user by id", "id", claims.Id)
+
+	_, err = orm.Where("id = ?", claims.Id).Get(user)
 	if err != nil {
 		return nil, err
 	}
