@@ -17,6 +17,7 @@ import (
 
 	"github.com/shoshta73/homehub/constants"
 	"github.com/shoshta73/homehub/log"
+	"github.com/shoshta73/homehub/server/metadata"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -26,6 +27,11 @@ const databaseFile = "homehub.db"
 const tokenFile = "token.txt"
 
 var orm *xorm.Engine
+
+const (
+	adminPermission uint8 = 1 << iota
+	userPermission
+)
 
 type User struct {
 	Id          int64
@@ -103,6 +109,17 @@ func (u *User) BeforeInsert() {
 		nameHash = sha512.Sum512([]byte(u.Username))
 	}
 	createdAtHash := sha512.Sum512([]byte(strconv.FormatInt(u.CreatedAt.Unix(), 10)))
+
+	meta := metadata.GetMetadata()
+
+	if meta.HasAdmin {
+		u.Permissions = userPermission
+	} else {
+		log.Info("Creating first user")
+		u.Permissions = adminPermission | userPermission
+		meta.UpdateHasAdmin(true)
+		go meta.Write()
+	}
 
 	combinedHash := make([]byte, 0, 64*4)
 	combinedHash = append(combinedHash, usernameHash[:]...)

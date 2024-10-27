@@ -50,16 +50,18 @@ RUN apk add --no-cache musl
 RUN apk add --no-cache musl-dev
 
 COPY go.mod go.sum ./
-RUN go mod download
 
 COPY ./log ./log
 COPY ./auth ./auth
 COPY ./models ./models
 COPY ./exec ./exec
+COPY ./server ./server
+COPY ./constants ./constants
 
+RUN go mod download
 RUN go mod tidy
 
-RUN go build -v -race -o ./bin/ ./...
+RUN go build -v -o ./bin/ ./...
 
 FROM alpine:3.20
 
