@@ -1,0 +1,12 @@
+.git
+node_modules
+frontend/node_modules
+.editorconfig
+.gitignore
+.release-it.json
+LICENSE
+./package.json
+./pnpm-lock.yaml
+bin
+./README.md
+frontend/dist
