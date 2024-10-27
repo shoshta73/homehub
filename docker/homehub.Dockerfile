@@ -1,6 +1,6 @@
-FROM node:22.10.0-alpine3.20 AS base
+FROM node:22.10.0-alpine3.20 AS frontend-base
 
-FROM base AS deps
+FROM frontend-base AS frontend-deps
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-FROM base AS builder
+FROM frontend-base AS frontend-builder
 
 WORKDIR /app
 
@@ -27,7 +27,7 @@ COPY ./frontend/components.json ./components.json
 
 COPY ./frontend/index.html ./index.html
 COPY  ./frontend/package.json ./frontend/yarn.lock* ./frontend/package-lock.json* ./frontend/pnpm-lock.yaml* ./
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=frontend-deps /app/node_modules ./node_modules
 
 COPY ./frontend/public ./public
 COPY ./frontend/src ./src
@@ -39,12 +39,36 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-FROM nginx:1.27-alpine3.20
+FROM golang:1.23.2-alpine3.20 AS backend-builder
 
-RUN rm -rf /usr/share/nginx/html
+WORKDIR /app
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+ENV CGO_ENABLED=1
 
+RUN apk add --no-cache gcc
+RUN apk add --no-cache musl
+RUN apk add --no-cache musl-dev
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY ./log ./log
+COPY ./auth ./auth
+COPY ./models ./models
+COPY ./exec ./exec
+
+RUN go mod tidy
+
+RUN go build -v -race -o ./bin/ ./...
+
+FROM alpine:3.20
+
+WORKDIR /app
+
+COPY --from=frontend-builder /app/dist ./dist
+COPY --from=backend-builder /app/bin/server ./server
+
+EXPOSE 443
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["./server"]
