@@ -1,9 +1,11 @@
 package log
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const logDir = "logs"
@@ -21,11 +23,12 @@ func init() {
 		}
 	}
 
+	lfp := filepath.Join(logDir, globalLogFile)
 	var logFile *os.File
-	os.Stat(filepath.Join(logDir, globalLogFile))
+	_, err = os.Stat(lfp)
 	if err != nil {
 		if os.IsNotExist(err) {
-			f, err := os.Create(filepath.Join(logDir, globalLogFile))
+			f, err := os.Create(lfp)
 			if err != nil {
 				panic(err)
 			}
@@ -33,6 +36,30 @@ func init() {
 		} else {
 			panic(err)
 		}
+	} else {
+		de, err := os.ReadDir(logDir)
+		if err != nil {
+			panic(err)
+		}
+
+		numLogFiles := 0
+
+		for _, d := range de {
+			if d.IsDir() {
+				continue
+			}
+
+			if strings.HasPrefix(d.Name(), "log") {
+				numLogFiles++
+			}
+		}
+
+		os.Rename(lfp, filepath.Join(logDir, fmt.Sprintf("log_%d.log", numLogFiles)))
+		f, err := os.Create(lfp)
+		if err != nil {
+			panic(err)
+		}
+		logFile = f
 	}
 
 	globalLogger = newMultiLogger([]io.Writer{os.Stderr, logFile})
