@@ -2,7 +2,7 @@
   "git": {
     "commitMessage": "chore: release v${version}",
     "commit": true,
-    "tag": false,
+    "tag": true,
     "push": false
   },
   "github": {
