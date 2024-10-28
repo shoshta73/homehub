@@ -81,3 +81,17 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('./go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+
+  docs-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+
+      - name: isntall mdbook
+        run: cargo install --git https://github.com/rust-lang/mdBook.git mdbook
+
+      - name: build docs
+        run: ./scripts/mdbook-build.sh
