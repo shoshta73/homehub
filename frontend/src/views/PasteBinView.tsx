@@ -16,6 +16,17 @@ function PasteBinView() {
     if (titleRef.current == null) {
       return;
     }
+
+    fetch("/pastebin/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: titleRef.current.value,
+        content: textAreaRef.current.value,
+      }),
+    });
   };
 
   return (
