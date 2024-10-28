@@ -1,6 +1,7 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import HomeView from "./views/HomeView";
 import { lazy, Suspense } from "react";
+import PasteBinView from "./views/PasteBinView";
 
 const RegisterView = lazy(() => import("./views/RegisterView"));
 const LoginView = lazy(() => import("./views/LoginView"));
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "home",
         element: <UserHomeView />,
+      },
+      {
+        path: "pastebin",
+        element: <PasteBinView />,
       },
     ],
   },

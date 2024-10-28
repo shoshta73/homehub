@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Menubar as MenubarPrimitive, MenubarMenu } from "@/components/ui/menubar";
+import {
+  Menubar as MenubarPrimitive,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+} from "@/components/ui/menubar";
 import useAppState from "@/store/state";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { LogIn, MoonIcon, SunIcon, UserIcon } from "lucide-react";
@@ -29,6 +35,18 @@ function Menubar() {
 
   return (
     <MenubarPrimitive className="h-14" id="menubar" data-testid="menubar">
+      {/* HomeHub apps */}
+      <MenubarMenu>
+        <MenubarTrigger>
+          <strong>HomeHub</strong>
+        </MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem onClick={() => navigate("/pastebin")}>
+            <strong>Pastebin</strong>
+          </MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+
       <div className="flex-grow h-auto" id="menubar-spacer" />
 
       <MenubarMenu>
