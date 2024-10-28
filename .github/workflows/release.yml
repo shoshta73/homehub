@@ -5,13 +5,15 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  packages: write
+  attestations: write
+
 jobs:
   build-docker-image:
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
