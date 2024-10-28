@@ -1,6 +1,7 @@
 {
   "git": {
-    "commit": false,
+    "commitMessage": "chore: release v${version}",
+    "commit": true,
     "tag": false,
     "push": false
   },
