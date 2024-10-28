@@ -1,0 +1,6 @@
+[book]
+authors = ["Borna Šoštarić"]
+language = "en"
+multilingual = false
+src = "docs"
+title = "HomeHub Docs"
