@@ -46,6 +46,7 @@ export default defineConfig({
           "ui/input": ["./src/components/ui/input.tsx"],
           "ui/label": ["./src/components/ui/label.tsx"],
           "ui/menubar": ["./src/components/ui/menubar.tsx"],
+          "ui/textarea": ["./src/components/ui/textarea.tsx"],
           zustand: ["zustand", "zustand/middleware"],
         },
       },
