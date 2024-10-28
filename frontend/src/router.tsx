@@ -1,11 +1,11 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import HomeView from "./views/HomeView";
 import { lazy, Suspense } from "react";
-import PasteBinView from "./views/PasteBinView";
 
 const RegisterView = lazy(() => import("./views/RegisterView"));
 const LoginView = lazy(() => import("./views/LoginView"));
 const UserHomeView = lazy(() => import("./views/UserHomeView"));
+const PasteBinView = lazy(() => import("./views/PasteBinView"));
 
 const Wrapper = () => (
   <div className="flex flex-col min-h-screen h-screen max-h-screen" data-testid="wrapper">
