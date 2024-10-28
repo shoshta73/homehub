@@ -57,6 +57,7 @@ COPY ./models ./models
 COPY ./exec ./exec
 COPY ./server ./server
 COPY ./constants ./constants
+COPY ./pastebin ./pastebin
 
 RUN go mod download
 RUN go mod tidy

@@ -11,6 +11,7 @@ import (
 	"github.com/shoshta73/homehub/auth"
 	"github.com/shoshta73/homehub/log"
 	"github.com/shoshta73/homehub/models/user"
+	"github.com/shoshta73/homehub/pastebin"
 )
 
 var liveCertDir string
@@ -46,8 +47,11 @@ func main() {
 
 	e.POST("/auth/register", auth.Register)
 	e.POST("/auth/login", auth.Login)
+
 	e.GET("/avatar", user.AvatarUrl)
 	e.GET("/avatars/:username", user.Avatar)
+
+	e.POST("/pastebin/create", pastebin.Create)
 
 	log.Info("Starting server")
 

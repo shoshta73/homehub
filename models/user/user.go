@@ -316,7 +316,7 @@ func GetUserByEmail(email string) (*User, error) {
 	return user, nil
 }
 
-func getUserByToken(token string) (*User, error) {
+func GetUserByToken(token string) (*User, error) {
 	user := &User{}
 
 	log.Info("Getting user by token", "token", token)

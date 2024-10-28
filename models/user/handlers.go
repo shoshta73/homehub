@@ -16,7 +16,7 @@ func AvatarUrl(c echo.Context) error {
 
 	token := cookie.Value
 
-	usr, err := getUserByToken(token)
+	usr, err := GetUserByToken(token)
 	if err != nil {
 		return err
 	}
