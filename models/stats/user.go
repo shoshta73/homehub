@@ -38,3 +38,19 @@ func InitUserStats(id int64) {
 	}
 	log.Info("User stats created", "id", id)
 }
+
+func IncrementPasteCreated(id int64) {
+	log.Info("Incrementing paste created", "id", id)
+	paste := &PastebinStats{}
+	_, err := orm.Where("id = ?", id).Get(paste)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+
+	paste.Created++
+	_, err = orm.Where("id = ?", id).Update(paste)
+	if err != nil {
+		log.Error(err)
+	}
+}

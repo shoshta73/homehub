@@ -86,5 +86,8 @@ func CreatePaste(title, content string, ownerId int64) (*Paste, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	go stats.IncrementPasteCreated(ownerId)
+
 	return &paste, nil
 }
