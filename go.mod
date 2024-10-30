@@ -3,7 +3,6 @@ module github.com/shoshta73/homehub
 go 1.23.2
 
 require (
-	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/charmbracelet/log v0.4.0
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/mattn/go-sqlite3 v1.14.24
@@ -12,6 +11,7 @@ require (
 require gopkg.in/yaml.v2 v2.2.2 // indirect
 
 require (
+	github.com/charmbracelet/lipgloss v0.10.0 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/goccy/go-json v0.8.1 // indirect
