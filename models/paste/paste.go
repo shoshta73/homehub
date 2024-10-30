@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/charmbracelet/log"
 	"github.com/shoshta73/homehub/constants"
-	"github.com/shoshta73/homehub/log"
 	"github.com/shoshta73/homehub/models/stats"
 	"xorm.io/xorm"
 )

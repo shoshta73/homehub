@@ -1,6 +1,6 @@
 package stats
 
-import "github.com/shoshta73/homehub/log"
+import "github.com/charmbracelet/log"
 
 type PastebinStats struct {
 	Id           int64 `xorm:"unique" json:"id"`
@@ -33,7 +33,7 @@ func pastebinStatsExist(id int64) (bool, error) {
 
 func GetPastebinStats(id int64) (*PastebinStats, error) {
 	pbs := &PastebinStats{}
-	_, err := orm.Get(pbs, &PastebinStats{Id: id})
+	_, err := orm.Where("id = ?", id).Get(pbs)
 	if err != nil {
 		return nil, err
 	}

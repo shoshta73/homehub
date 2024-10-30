@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/shoshta73/homehub/log"
+	"github.com/charmbracelet/log"
 )
 
 var defaultMetadata = Metadata{

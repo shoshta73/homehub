@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/charmbracelet/log"
 	"github.com/labstack/echo/v4"
-	"github.com/shoshta73/homehub/log"
 )
 
 func AvatarUrl(c echo.Context) error {

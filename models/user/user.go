@@ -15,8 +15,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"xorm.io/xorm"
 
+	"github.com/charmbracelet/log"
 	"github.com/shoshta73/homehub/constants"
-	"github.com/shoshta73/homehub/log"
 	"github.com/shoshta73/homehub/server/metadata"
 
 	_ "github.com/mattn/go-sqlite3"

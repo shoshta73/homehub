@@ -3,7 +3,7 @@ package constants
 import (
 	"os"
 
-	"github.com/shoshta73/homehub/log"
+	"github.com/charmbracelet/log"
 )
 
 const DATA_DIR string = "data"

@@ -7,8 +7,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/charmbracelet/log"
+
 	"github.com/shoshta73/homehub/constants"
-	"github.com/shoshta73/homehub/log"
 )
 
 const defaultSize = 1024

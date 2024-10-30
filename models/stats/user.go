@@ -1,6 +1,6 @@
 package stats
 
-import "github.com/shoshta73/homehub/log"
+import "github.com/charmbracelet/log"
 
 func CheckUserStats(id int64) {
 	log.Info("Checking user stats", "id", id)
