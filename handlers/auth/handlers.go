@@ -9,7 +9,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/shoshta73/homehub/log"
+	"github.com/charmbracelet/log"
 	"github.com/shoshta73/homehub/models/stats"
 	"github.com/shoshta73/homehub/models/user"
 )
