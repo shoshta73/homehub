@@ -17,6 +17,8 @@ FROM frontend-base AS frontend-builder
 
 WORKDIR /app
 
+ENV BUILDER=true
+
 COPY ./frontend/vite.config.ts ./vite.config.ts
 COPY ./frontend/tsconfig.json ./tsconfig.json
 COPY ./frontend/tsconfig.app.json ./tsconfig.app.json
@@ -51,13 +53,11 @@ RUN apk add --no-cache musl-dev
 
 COPY go.mod go.sum ./
 
-COPY ./log ./log
-COPY ./auth ./auth
 COPY ./models ./models
 COPY ./exec ./exec
 COPY ./server ./server
 COPY ./constants ./constants
-COPY ./pastebin ./pastebin
+COPY ./handlers ./handlers
 
 RUN go mod download
 RUN go mod tidy

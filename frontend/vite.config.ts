@@ -32,7 +32,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: "../bin/dist",
+    outDir: process.env.BUILDER ? "dist" : "../bin/dist",
     emptyOutDir: true,
     rollupOptions: {
       output: {
