@@ -89,8 +89,8 @@ type Paste struct {
 	Id         int64 `xorm:"unique pk autoincr"`
 	Title      string
 	Content    string
-	CreatedAt  int64
-	UpdatedAt  int64
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 	OwnerId    int64
 	Compressed bool
 }
@@ -141,11 +141,13 @@ func CreatePaste(title, content string, ownerId int64) (*Paste, error) {
 		cnt = content
 	}
 
+	tn := time.Now()
+
 	paste := Paste{
 		Title:      title,
 		Content:    cnt,
-		CreatedAt:  time.Now().Unix(),
-		UpdatedAt:  time.Now().Unix(),
+		CreatedAt:  tn,
+		UpdatedAt:  tn,
 		OwnerId:    ownerId,
 		Compressed: comp,
 	}
