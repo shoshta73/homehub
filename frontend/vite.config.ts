@@ -32,6 +32,8 @@ export default defineConfig({
   },
 
   build: {
+    outDir: "../bin/dist",
+    emptyOutDir: true,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -63,6 +65,8 @@ export default defineConfig({
       "/auth": "http://localhost:8080",
       "/avatar": "http://localhost:8080",
       "/avatars": "http://localhost:8080",
+      "/pastebin": "http://localhost:8080",
+      "/pastebin/stats": "http://localhost:8080",
     },
   },
 });
