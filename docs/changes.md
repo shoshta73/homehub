@@ -1,5 +1,38 @@
 
 
+## [0.1.1](https://github.com/shoshta73/homehub/compare/0.1.0...0.1.1) (2024-10-30)
+
+### Features
+
+* **frontend:** guard api url from being undefined ([8708010](https://github.com/shoshta73/homehub/commit/870801040669ce15db987c05153105b3572d4a48))
+* **frontend:** implement showing user stats ([6a3c6f7](https://github.com/shoshta73/homehub/commit/6a3c6f79025196b0bdc30a6233367c093714e0a4))
+* **frontend:** send credentials to the /avatar and /pastebin/create ([4f039d1](https://github.com/shoshta73/homehub/commit/4f039d1185a1df2f215649937c47e424eb1e567f))
+* **server:** pastebin stats handler ([8c80b7b](https://github.com/shoshta73/homehub/commit/8c80b7b0d0d928df8975e934464f2f1d5c29e268))
+* **server:** prod/release mode ([8778939](https://github.com/shoshta73/homehub/commit/8778939e0382f202a0a4f83c64f74276d88b4c2f))
+
+### Bug Fixes
+
+* **server/models:** paste model now use time.Time for time stamping ([6e395ad](https://github.com/shoshta73/homehub/commit/6e395ad9e143021e82499a8d404a65d05b396283))
+* **server:** Past id not being autoincrement ([a81ac51](https://github.com/shoshta73/homehub/commit/a81ac5180994bdbf5b3ecad6a02d3194736eecfa))
+
+### Miscellaneous Chores
+
+* **frontend:** added proxy config for development ([aaa2416](https://github.com/shoshta73/homehub/commit/aaa24160668b8fcb9a625967ba69c3facdf4318a))
+* **frontend:** simplify config ([a057369](https://github.com/shoshta73/homehub/commit/a05736984d67565ddb163120e247a14a084db348))
+* **server:** dev setup ([4e22436](https://github.com/shoshta73/homehub/commit/4e224365cea111418dcc534d37c127bbff8b0557))
+* update changelog ([2a0477b](https://github.com/shoshta73/homehub/commit/2a0477bf0c334478998e848731ccc5f104ef431e))
+* update Changelog ([ba46f6c](https://github.com/shoshta73/homehub/commit/ba46f6c046e591fd7f05bd075a9ac333618aeb7f))
+* update go.mod file ([9a3d84c](https://github.com/shoshta73/homehub/commit/9a3d84c3401536dfb2271d1c1b10821891b7efce))
+
+### Code Refactoring
+
+* **server:** move handlers to their own module ([e0d51b4](https://github.com/shoshta73/homehub/commit/e0d51b455817c5d666ef6b04e450bd43cf3cd2e4))
+* **server:** use default charmbracelet logger ([64e331f](https://github.com/shoshta73/homehub/commit/64e331f5c3f8cdb130aaf165214cde2718c19d5a))
+
+### Build System
+
+* update build configs to support building for prod ([43b6fdf](https://github.com/shoshta73/homehub/commit/43b6fdf60176b02d8b09fd3ff2ca5f0d4e311464))
+
 ## 0.1.0 (2024-10-28)
 
 ### Features
