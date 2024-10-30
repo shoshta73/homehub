@@ -1,29 +1,19 @@
-//go:build !dev
-// +build !dev
+//go:build dev
+// +build dev
 
 package main
 
 import (
 	"net/http"
-	"os"
-	"path/filepath"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-
 	"github.com/shoshta73/homehub/log"
 )
-
-var liveCertDir string
-
-func init() {
-	liveCertDir = os.Getenv("LIVE_CERT")
-}
 
 func main() {
 	e := echo.New()
 
-	e.Pre(middleware.HTTPSRedirect())
 	e.Pre(middleware.RemoveTrailingSlash())
 
 	e.HideBanner = true
@@ -31,6 +21,7 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
 	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Skipper:    nil,
@@ -42,20 +33,11 @@ func main() {
 		Filesystem: nil,
 	}))
 
-	certFile := filepath.Join(liveCertDir, "fullchain.pem")
-	keyFile := filepath.Join(liveCertDir, "privkey.pem")
-
 	routes(e)
 
 	log.Info("Starting server")
-	go func() {
-		if err := e.Start(":80"); err != nil && err != http.ErrServerClosed {
-			log.Fatal("HTTP server failed:", err)
-		}
-	}()
 
-	err := e.StartTLS(":443", certFile, keyFile)
-	if err != nil {
-		log.Fatal(err)
+	if err := e.Start(":8080"); err != nil && err != http.ErrServerClosed {
+		log.Fatal("HTTP server failed:", err)
 	}
 }
