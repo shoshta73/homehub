@@ -6,9 +6,9 @@ package main
 import (
 	"net/http"
 
+	"github.com/charmbracelet/log"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/shoshta73/homehub/log"
 )
 
 func main() {

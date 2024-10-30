@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	"github.com/shoshta73/homehub/log"
+	"github.com/charmbracelet/log"
 )
 
 var liveCertDir string

@@ -3,10 +3,11 @@ package main
 import (
 	"github.com/labstack/echo/v4"
 
-	"github.com/shoshta73/homehub/auth"
+	"github.com/shoshta73/homehub/handlers/auth"
+	"github.com/shoshta73/homehub/handlers/pastebin"
+	"github.com/shoshta73/homehub/handlers/stats"
+
 	"github.com/shoshta73/homehub/models/user"
-	"github.com/shoshta73/homehub/pastebin"
-	"github.com/shoshta73/homehub/stats"
 )
 
 func routes(e *echo.Echo) {
