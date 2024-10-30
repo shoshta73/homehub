@@ -59,34 +59,10 @@ export default defineConfig({
   },
 
   server: {
-    port: 5173,
-    strictPort: true,
     proxy: {
-      "/api": {
-        target: "http://localhost:8000",
-        changeOrigin: true,
-      },
-      "/auth": {
-        target: "http://localhost:8000",
-        changeOrigin: true,
-      },
-      "/avatar": {
-        target: "http://localhost:8000",
-        changeOrigin: true,
-      },
-      "/avatars": {
-        target: "http://localhost:8000",
-        changeOrigin: true,
-      },
-      "/pastebin": {
-        target: "http://localhost:8000",
-        changeOrigin: true,
-      },
-      "/ws": {
-        target: "ws://localhost:8000",
-        ws: true,
-        changeOrigin: true,
-      },
+      "/auth": "http://localhost:8080",
+      "/avatar": "http://localhost:8080",
+      "/avatars": "http://localhost:8080",
     },
   },
 });
