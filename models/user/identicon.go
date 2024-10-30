@@ -6,6 +6,7 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/charmbracelet/log"
 
@@ -15,18 +16,15 @@ import (
 const defaultSize = 1024
 
 func GenerateIdenticon(u User) error {
+	tn := time.Now()
+	defer func() {
+		log.Infof("Generation took %+v", time.Since(tn))
+	}()
 	log.Info("Generating identicon for", "user", u.Username)
 	const gridSize = 128
 	cellSize := defaultSize / gridSize
 
 	img := image.NewRGBA(image.Rect(0, 0, defaultSize, defaultSize))
-	backgroundColor := color.White
-
-	for x := 0; x < defaultSize; x++ {
-		for y := 0; y < defaultSize; y++ {
-			img.Set(x, y, backgroundColor)
-		}
-	}
 
 	fillColor := parseColorFromHash(u.Avatar[:], 0)
 	log.Info("Fill color", "fillColor", fillColor)
