@@ -86,7 +86,7 @@ func init() {
 }
 
 type Paste struct {
-	Id         int64 `xorm:"unique pk"`
+	Id         int64 `xorm:"unique pk autoincr"`
 	Title      string
 	Content    string
 	CreatedAt  int64
