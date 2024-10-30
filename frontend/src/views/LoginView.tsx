@@ -27,7 +27,7 @@ function RegisterView() {
   });
 
   function onSubmit(values: z.infer<typeof loginSchema>) {
-    fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+    fetch(`${import.meta.env.VITE_API_URL ?? ""}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -17,7 +17,7 @@ function PasteBinView() {
       return;
     }
 
-    fetch(`${import.meta.env.VITE_API_URL}/pastebin/create`, {
+    fetch(`${import.meta.env.VITE_API_URL ?? ""}/pastebin/create`, {
       method: "POST",
       credentials: "include",
       headers: {
