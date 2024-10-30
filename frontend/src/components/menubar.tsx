@@ -19,7 +19,9 @@ function Menubar() {
 
   useEffect(() => {
     const fetchAvatar = async () => {
-      const response = await fetch("/avatar");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/avatar`, {
+        credentials: "include",
+      });
       if (response.status !== 200) {
         setAvatar(null);
         return;
