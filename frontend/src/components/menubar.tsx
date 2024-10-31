@@ -9,29 +9,51 @@ import {
 import useAppState from "@/store/state";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { LogIn, MoonIcon, SunIcon, UserIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Menubar() {
+  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
   const state = useAppState();
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAvatar = async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_URL ?? ""}/avatar`, {
-        credentials: "include",
-      });
-      const data = await response.text();
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL ?? ""}/avatar`, {
+          credentials: "include",
+        });
+        const data = await response.text();
 
-      if (/^avatars\/.*\.png$/.test(data)) {
-        setAvatar(data);
+        if (data === "NO") {
+          return;
+        }
+
+        if (/^avatars\/.*\.png$/.test(data)) {
+          setAvatar(data);
+          if (intervalIdRef.current != null) {
+            clearInterval(intervalIdRef.current);
+          }
+          intervalIdRef.current = null;
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
     if (avatar === null) {
       fetchAvatar();
+      if (intervalIdRef.current != null) {
+        intervalIdRef.current = setInterval(fetchAvatar, 100);
+      }
     }
+
+    return () => {
+      if (intervalIdRef.current != null) {
+        clearInterval(intervalIdRef.current);
+      }
+    };
   }, [avatar]);
 
   return (
