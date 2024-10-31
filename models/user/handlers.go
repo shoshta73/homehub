@@ -21,6 +21,14 @@ func AvatarUrl(c echo.Context) error {
 		return c.String(http.StatusOK, "OK")
 	}
 
+	a, in := creatingMap[usr.Id]
+	if in {
+		if !a {
+			return c.String(http.StatusOK, usr.GetAvatarURL())
+		}
+		return c.String(http.StatusOK, "NO")
+	}
+
 	return c.String(http.StatusOK, usr.GetAvatarURL())
 }
 

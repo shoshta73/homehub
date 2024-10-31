@@ -6,7 +6,7 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
-	"time"
+	"sync"
 
 	"github.com/charmbracelet/log"
 
@@ -15,11 +15,20 @@ import (
 
 const defaultSize = 1024
 
+var mapMutex sync.Mutex = sync.Mutex{}
+var creatingMap map[int64]bool = map[int64]bool{}
+
 func GenerateIdenticon(u User) error {
-	tn := time.Now()
+	mapMutex.Lock()
+	creatingMap[u.Id] = true
+	mapMutex.Unlock()
+
 	defer func() {
-		log.Infof("Generation took %+v", time.Since(tn))
+		mapMutex.Lock()
+		creatingMap[u.Id] = false
+		mapMutex.Unlock()
 	}()
+
 	log.Info("Generating identicon for", "user", u.Username)
 	const gridSize = 128
 	cellSize := defaultSize / gridSize
