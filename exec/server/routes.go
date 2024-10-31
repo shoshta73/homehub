@@ -14,6 +14,7 @@ func routes(e *echo.Echo) {
 	e.POST("/auth/register", auth.Register)
 	e.POST("/auth/login/username", auth.LoginWithUsername)
 	e.POST("/auth/login/email", auth.LoginWithEmail)
+	e.POST("/auth/validate", auth.Validate)
 
 	e.GET("/avatar", user.AvatarUrl)
 	e.GET("/avatars/:username", user.Avatar)
