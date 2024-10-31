@@ -11,14 +11,14 @@ import (
 func AvatarUrl(c echo.Context) error {
 	cookie, err := c.Cookie("token")
 	if err != nil {
-		return err
+		return c.String(http.StatusOK, "OK")
 	}
 
 	token := cookie.Value
 
 	usr, err := GetUserByToken(token)
 	if err != nil {
-		return err
+		return c.String(http.StatusOK, "OK")
 	}
 
 	return c.String(http.StatusOK, usr.GetAvatarURL())
