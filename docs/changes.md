@@ -1,5 +1,30 @@
 
 
+## [0.1.2](https://github.com/shoshta73/homehub/compare/0.1.1...0.1.2) (2024-10-31)
+
+### Features
+
+* **frontend/menubar:** logout functionality ([6063ad8](https://github.com/shoshta73/homehub/commit/6063ad809ce6b2dcaea3493dee1a4b760d873b48))
+* **frontend/menubar:** validate return pattern ([a866c38](https://github.com/shoshta73/homehub/commit/a866c388a68dee12e982d73aae424730a162e651))
+* **frontend:** paginate login view ([eec0121](https://github.com/shoshta73/homehub/commit/eec012144a568ec426de7b89f465af70dd7b024d))
+* **frontend:** poll for avatar ([de672ed](https://github.com/shoshta73/homehub/commit/de672edbee32223b617cb532285f4a7a583a4a45))
+* **frontend:** validate on protected routes ([a6d8d55](https://github.com/shoshta73/homehub/commit/a6d8d55e37aef72b1eccfc33e55b07b2720e9ead))
+* **server:** implement email only login ([12afa3c](https://github.com/shoshta73/homehub/commit/12afa3c6551af1a195c65980b1ade9e50602bfed))
+* **server:** implement username only login ([33d33e5](https://github.com/shoshta73/homehub/commit/33d33e5a6241678914535bf6313014b78dd7ba0c))
+* **server:** implement validate handler ([9521452](https://github.com/shoshta73/homehub/commit/95214523a0240a704dc1eaa9022c74fcb2c1bb9a))
+* **server:** logout handler ([b4fbe51](https://github.com/shoshta73/homehub/commit/b4fbe5118db8ecaad63b7aaa192e89aec3259691))
+* **server:** Only 200 resp on /avatar ([23cf658](https://github.com/shoshta73/homehub/commit/23cf658ae64d1df5641d88fe95ad337faf5e45bf))
+* **server:** prevent giving avatar url if image is not ready ([3da8e1a](https://github.com/shoshta73/homehub/commit/3da8e1a151ce4a4cc5f153b1f236738c393c46a5))
+* **server:** simplify login logic ([fb6947f](https://github.com/shoshta73/homehub/commit/fb6947f2813ed57f4bd2d7c2b03b3a4c87ffb707))
+
+### Performance Improvements
+
+* **server:** improve generation of identicon ([b314c4a](https://github.com/shoshta73/homehub/commit/b314c4a08a0f411ff814ddb7699c6398f1978ce5))
+
+### Miscellaneous Chores
+
+* update changelog ([2b7fe07](https://github.com/shoshta73/homehub/commit/2b7fe07101658499c57bc16ed5b712c77359ecbb))
+
 ## [0.1.1](https://github.com/shoshta73/homehub/compare/0.1.0...0.1.1) (2024-10-30)
 
 ### Features
