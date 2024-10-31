@@ -2,11 +2,33 @@ import Menubar from "@/components/menubar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 function PasteBinView() {
   const titleRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const validate = async () => {
+      try {
+        const res = await fetch("/auth/validate", {
+          method: "POST",
+          credentials: "include",
+        });
+        if (res.status !== 200) {
+          navigate("/login");
+        }
+      } catch (err) {
+        console.error(err);
+        navigate("/login");
+      }
+    };
+
+    validate();
+  }, []);
 
   const handleSubmit = () => {
     if (textAreaRef.current == null) {

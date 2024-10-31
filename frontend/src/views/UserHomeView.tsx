@@ -4,6 +4,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@
 import useHVState from "@/store/homeviewstate";
 import { ClipboardIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const PastebinStats = () => {
   const [stats, setStats] = useState<{
@@ -12,6 +13,27 @@ const PastebinStats = () => {
     sharedWithMe: number;
   } | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const validate = async () => {
+      try {
+        const res = await fetch("/auth/validate", {
+          method: "POST",
+          credentials: "include",
+        });
+        if (res.status !== 200) {
+          navigate("/login");
+        }
+      } catch (err) {
+        console.error(err);
+        navigate("/login");
+      }
+    };
+
+    validate();
+  }, []);
 
   useEffect(() => {
     const getStats = async () => {
