@@ -22,12 +22,11 @@ function Menubar() {
       const response = await fetch(`${import.meta.env.VITE_API_URL ?? ""}/avatar`, {
         credentials: "include",
       });
-      if (response.status !== 200) {
-        setAvatar(null);
-        return;
-      }
       const data = await response.text();
-      setAvatar(data);
+
+      if (/^avatars\/.*\.png$/.test(data)) {
+        setAvatar(data);
+      }
     };
 
     if (avatar === null) {
