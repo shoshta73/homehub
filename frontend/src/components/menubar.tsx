@@ -51,38 +51,54 @@ function Menubar() {
 
       <div className="flex-grow h-auto" id="menubar-spacer" />
 
-      <MenubarMenu>
-        {avatar != null ? (
-          <Avatar>
-            <AvatarImage className="h-12 w-12 rounded-md" src={`${window.location.origin}/${avatar}`} />
-            <AvatarFallback>
-              <UserIcon />
-            </AvatarFallback>
-          </Avatar>
-        ) : (
-          <>
-            {/* Register and Login buttons */}
-            <Button
-              className="my-1 px-1 py-1 h-12 flex flex-row text-base [&_svg]:size-6"
-              variant={"outline"}
-              onClick={() => navigate("/register")}
-              data-testid="register-button"
+      {avatar != null ? (
+        <MenubarMenu>
+          <MenubarTrigger>
+            <Avatar>
+              <AvatarImage className="h-12 w-12 rounded-md" src={`${window.location.origin}/${avatar}`} />
+              <AvatarFallback>
+                <UserIcon />
+              </AvatarFallback>
+            </Avatar>
+          </MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem
+              onClick={() => {
+                fetch("/auth/logout", {
+                  method: "POST",
+                  credentials: "include",
+                })
+                  .then(() => navigate("/"))
+                  .catch((err) => console.error(err));
+              }}
             >
-              <UserIcon data-testid="register-icon" />
-              <p data-testid="register-text">Register</p>
-            </Button>
-            <Button
-              className="my-1 px-1 py-1 h-12 flex flex-row text-base [&_svg]:size-6"
-              variant={"outline"}
-              onClick={() => navigate("/login")}
-              data-testid="login-button"
-            >
-              <LogIn data-testid="login-icon" />
-              <p data-testid="login-text">Login</p>
-            </Button>
-          </>
-        )}
-      </MenubarMenu>
+              <strong>Logout</strong>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      ) : (
+        <MenubarMenu>
+          {/* Register and Login buttons */}
+          <Button
+            className="my-1 px-1 py-1 h-12 flex flex-row text-base [&_svg]:size-6"
+            variant={"outline"}
+            onClick={() => navigate("/register")}
+            data-testid="register-button"
+          >
+            <UserIcon data-testid="register-icon" />
+            <p data-testid="register-text">Register</p>
+          </Button>
+          <Button
+            className="my-1 px-1 py-1 h-12 flex flex-row text-base [&_svg]:size-6"
+            variant={"outline"}
+            onClick={() => navigate("/login")}
+            data-testid="login-button"
+          >
+            <LogIn data-testid="login-icon" />
+            <p data-testid="login-text">Login</p>
+          </Button>
+        </MenubarMenu>
+      )}
 
       <MenubarMenu>
         <Button
