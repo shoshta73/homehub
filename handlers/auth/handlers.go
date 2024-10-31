@@ -183,3 +183,31 @@ func LoginWithUsername(c echo.Context) error {
 
 	return c.String(http.StatusOK, "OK")
 }
+
+func Validate(c echo.Context) error {
+	cookie, err := c.Cookie("token")
+	if err != nil {
+		return err
+	}
+
+	if cookie == nil {
+		return c.String(http.StatusUnauthorized, "Unauthorized")
+	}
+
+	return c.String(http.StatusOK, "OK")
+}
+
+func Logout(c echo.Context) error {
+	cookie := http.Cookie{
+		Name:     "token",
+		Value:    "",
+		Expires:  time.Now().Add(-(time.Hour * 24 * 3)),
+		HttpOnly: true,
+		Secure:   true,
+		Path:     "/",
+	}
+
+	c.SetCookie(&cookie)
+
+	return c.String(http.StatusOK, "OK")
+}

@@ -193,3 +193,17 @@ func Validate(c echo.Context) error {
 
 	return c.String(http.StatusOK, "OK")
 }
+
+func Logout(c echo.Context) error {
+	cookie := http.Cookie{
+		Name:     "token",
+		Value:    "",
+		Expires:  time.Now().Add(-(time.Hour * 24 * 3)),
+		HttpOnly: true,
+		Path:     "/",
+	}
+
+	c.SetCookie(&cookie)
+
+	return c.String(http.StatusOK, "OK")
+}
