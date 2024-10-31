@@ -283,6 +283,28 @@ func VerifyUser(username, email, pass string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
 }
 
+func VerifyUserByEmail(email, pass string) bool {
+	user := &User{}
+
+	_, err := orm.Where("email = ?", email).Get(user)
+	if err != nil {
+		return false
+	}
+
+	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
+}
+
+func VerifyUserByUsername(username, pass string) bool {
+	user := &User{}
+
+	_, err := orm.Where("username = ?", username).Get(user)
+	if err != nil {
+		return false
+	}
+
+	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
+}
+
 func GetUserById(id int64) (*User, error) {
 	user := &User{}
 
