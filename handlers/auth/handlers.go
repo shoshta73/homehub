@@ -172,3 +172,57 @@ func LoginWithEmail(c echo.Context) error {
 
 	return c.String(http.StatusOK, "OK")
 }
+
+func LoginWithUsername(c echo.Context) error {
+	var body struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	if err := c.Bind(&body); err != nil {
+		return err
+	}
+
+	log.Info("Received login request")
+
+	if body.Username == "" && body.Password == "" {
+		return c.String(http.StatusBadRequest, "Username and password are required")
+	}
+
+	if body.Username == "" {
+		return c.String(http.StatusBadRequest, "Username is required")
+	}
+
+	if body.Password == "" {
+		return c.String(http.StatusBadRequest, "Password is required")
+	}
+
+	if !user.VerifyUserByUsername(body.Username, body.Password) {
+		return c.String(http.StatusUnauthorized, "Invalid credentials")
+	}
+
+	usr, err := user.GetUserByUsername(body.Username)
+	if err != nil {
+		return err
+	}
+
+	tkn, err := usr.GetClaims().GenerateToken()
+	if err != nil {
+		return err
+	}
+
+	go stats.CheckUserStats(usr.Id)
+
+	cookie := http.Cookie{
+		Name:     "token",
+		Value:    tkn,
+		Expires:  time.Now().Add(time.Hour * 24 * 3),
+		HttpOnly: true,
+		Secure:   true,
+		Path:     "/",
+	}
+
+	c.SetCookie(&cookie)
+
+	return c.String(http.StatusOK, "OK")
+}
