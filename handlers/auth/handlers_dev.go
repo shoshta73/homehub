@@ -67,6 +67,7 @@ func Register(c echo.Context) error {
 		Value:    tkn,
 		Expires:  time.Now().Add(time.Hour * 24 * 3),
 		HttpOnly: true,
+		Secure:   true,
 		Path:     "/",
 	}
 
@@ -75,9 +76,8 @@ func Register(c echo.Context) error {
 	return c.String(http.StatusOK, "OK")
 }
 
-func Login(c echo.Context) error {
+func LoginWithEmail(c echo.Context) error {
 	var body struct {
-		Username string `json:"username"`
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
@@ -88,13 +88,78 @@ func Login(c echo.Context) error {
 
 	log.Info("Received login request")
 
-	if !user.VerifyUser(body.Username, body.Email, body.Password) {
+	if body.Email == "" && body.Password == "" {
+		return c.String(http.StatusBadRequest, "Email and password are required")
+	}
+
+	if body.Email == "" {
+		return c.String(http.StatusBadRequest, "Email is required")
+	}
+
+	if body.Password == "" {
+		return c.String(http.StatusBadRequest, "Password is required")
+	}
+
+	usr, ok, err := user.Verify(map[string]string{"email": body.Email}, body.Password)
+	if err != nil {
+		return err
+	}
+
+	if !ok {
 		return c.String(http.StatusUnauthorized, "Invalid credentials")
 	}
 
-	usr, err := user.GetUserByEmail(body.Email)
+	tkn, err := usr.GetClaims().GenerateToken()
 	if err != nil {
 		return err
+	}
+
+	go stats.CheckUserStats(usr.Id)
+
+	cookie := http.Cookie{
+		Name:     "token",
+		Value:    tkn,
+		Expires:  time.Now().Add(time.Hour * 24 * 3),
+		HttpOnly: true,
+		Path:     "/",
+	}
+
+	c.SetCookie(&cookie)
+
+	return c.String(http.StatusOK, "OK")
+}
+
+func LoginWithUsername(c echo.Context) error {
+	var body struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	if err := c.Bind(&body); err != nil {
+		return err
+	}
+
+	log.Info("Received login request")
+
+	if body.Username == "" && body.Password == "" {
+		return c.String(http.StatusBadRequest, "Username and password are required")
+	}
+
+	if body.Username == "" {
+		return c.String(http.StatusBadRequest, "Username is required")
+	}
+
+	if body.Password == "" {
+		return c.String(http.StatusBadRequest, "Password is required")
+	}
+
+	usr, ok, err := user.Verify(map[string]string{"username": body.Username}, body.Password)
+	if err != nil {
+		return err
+	}
+
+	if !ok {
+		return c.String(http.StatusUnauthorized, "Invalid credentials")
 	}
 
 	tkn, err := usr.GetClaims().GenerateToken()

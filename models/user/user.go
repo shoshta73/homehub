@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/sha512"
 	"database/sql"
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -259,50 +260,34 @@ func CreateUser(username, name, email, pass string) (*User, error) {
 	return &user, nil
 }
 
-func VerifyUser(username, email, pass string) bool {
+func Verify(selector map[string]string, pass string) (*User, bool, error) {
 	user := &User{}
+	var email string
+	var username string
+	var s bool
+	var err error
 
-	if username == "" && email == "" || pass == "" {
-		return false
-	}
-
-	if email != "" {
-		_, err := orm.Where("email = ?", email).Get(user)
+	email, s = selector["email"]
+	if s {
+		user, err = GetUserByEmail(email)
 		if err != nil {
-			return false
+			return nil, false, err
 		}
+
+		return user, bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil, nil
 	}
 
-	if username != "" {
-		_, err := orm.Where("username = ?", username).Get(user)
+	username, s = selector["username"]
+	if s {
+		user, err = GetUserByUsername(username)
 		if err != nil {
-			return false
+			return nil, false, err
 		}
+
+		return user, bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil, nil
 	}
 
-	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
-}
-
-func VerifyUserByEmail(email, pass string) bool {
-	user := &User{}
-
-	_, err := orm.Where("email = ?", email).Get(user)
-	if err != nil {
-		return false
-	}
-
-	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
-}
-
-func VerifyUserByUsername(username, pass string) bool {
-	user := &User{}
-
-	_, err := orm.Where("username = ?", username).Get(user)
-	if err != nil {
-		return false
-	}
-
-	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
+	return nil, false, errors.New("no selector provided")
 }
 
 func GetUserById(id int64) (*User, error) {
