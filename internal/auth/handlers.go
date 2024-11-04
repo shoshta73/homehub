@@ -14,6 +14,7 @@ func Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Post("/register", register)
+	r.Post("/login", loginWithEmail)
 
 	return r
 }
@@ -118,6 +119,58 @@ func register(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func loginWithEmail(w http.ResponseWriter, r *http.Request) {
+	var body struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	logger.Info("Got request to login with email")
+
+	logger.Info("Decoding body")
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		logger.Error("Failed to decode body", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	logger.Info("Body decoded")
+
+	logger.Info("Checking request body")
+
+	if body.Email == "" {
+		logger.Error("Email is empty")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if body.Password == "" {
+		logger.Error("Password is empty")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	logger.Info("Request body checked")
+
+	logger.Info("Getting user by email")
+	user, err := user.GetUserByEmail(body.Email)
+	if err != nil {
+		logger.Error("Failed to get user by email", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	logger.Info("Got User")
+
+	if !user.VerifyPassword(body.Password) {
+		logger.Error("Password does not match")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	logger.Info("User logged in")
 
 	w.WriteHeader(http.StatusOK)
 }
