@@ -6,6 +6,8 @@ interface ImportMetaEnv {
   readonly MODE: string;
   readonly PROD: boolean;
   readonly SSR: boolean;
+
+  readonly VITE_API_URL: string | undefined;
 }
 
 interface ImportMeta {
