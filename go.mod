@@ -35,6 +35,7 @@ require (
 require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/lipgloss v0.10.0 // indirect
+	github.com/go-chi/cors v1.2.1
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/google/uuid v1.6.0
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
