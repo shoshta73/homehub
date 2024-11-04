@@ -34,6 +34,10 @@ type User struct {
 	UpdatedAt time.Time
 }
 
+func (user *User) VerifyPassword(pass string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
+}
+
 func CreateUser(username, email, password string, optionals map[string]string) *User {
 	logger.Info("Creating user")
 	user := &User{}
