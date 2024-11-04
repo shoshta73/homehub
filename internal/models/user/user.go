@@ -7,6 +7,7 @@ import (
 	"github.com/charmbracelet/log"
 	"github.com/google/uuid"
 	"github.com/shoshta73/homehub/internal/storage/database"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var logger = log.New(os.Stderr)
@@ -34,6 +35,7 @@ type User struct {
 }
 
 func CreateUser(username, email, password string, optionals map[string]string) *User {
+	logger.Info("Creating user")
 	user := &User{}
 
 	tn := time.Now()
@@ -42,26 +44,45 @@ func CreateUser(username, email, password string, optionals map[string]string) *
 
 	user.Username = username
 	user.Email = email
-	user.Password = password
+	log.Info("Encrypting password")
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		logger.Error("Failed to hash password", err)
+		return nil
+	}
+	user.Password = string(hash)
 
 	name, e := optionals["name"]
 	if !e {
+		logger.Info("Name not found, using username")
 		user.Name = username
 	} else {
+		logger.Info("Name found", "name", name)
 		user.Name = name
 	}
 
 	user.CreatedAt = tn
 	user.UpdatedAt = tn
 
+	logger.Info("User created")
 	return user
 }
 
 func InsertUser(user *User) error {
+	logger.Info("Inserting user")
 	_, err := database.GetEngine().Insert(user)
 	if err != nil {
-		logger.Error("Failed to insert user", err)
 		return err
 	}
+	logger.Info("User inserted")
 	return nil
+}
+
+func UsernameExists(username string) (bool, error) {
+	return database.GetEngine().Get(&User{Username: username})
+}
+
+func EmailExists(email string) (bool, error) {
+	return database.GetEngine().Get(&User{Email: email})
 }
