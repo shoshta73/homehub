@@ -71,6 +71,36 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 	logger.Info("Request body checked")
 
+	logger.Info("Body parsed", "name", body.Name, "username", body.Username, "email", body.Email)
+
+	logger.Info("Checking if username exists")
+	exists, err := user.UsernameExists(body.Username)
+	if err != nil {
+		logger.Error("Failed to check if username exists", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if exists {
+		logger.Error("Username already exists")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	logger.Info("Username does not exist")
+
+	logger.Info("Checking if email exists")
+	exists, err = user.EmailExists(body.Email)
+	if err != nil {
+		logger.Error("Failed to check if email exists", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if exists {
+		logger.Error("Email already exists")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	logger.Info("Email does not exist")
+
 	logger.Info("Registering user")
 	var u *user.User
 
@@ -89,4 +119,5 @@ func register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusOK)
 }
