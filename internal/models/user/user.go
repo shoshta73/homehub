@@ -90,3 +90,13 @@ func UsernameExists(username string) (bool, error) {
 func EmailExists(email string) (bool, error) {
 	return database.GetEngine().Get(&User{Email: email})
 }
+
+func GetUserByEmail(email string) (*User, error) {
+	user := &User{}
+	_, err := database.GetEngine().Where("email = ?", email).Get(user)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
