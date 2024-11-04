@@ -27,10 +27,11 @@ func init() {
 	if !exists {
 		logger.Warn("Database does not exist, creating...")
 
-		err := fs.CreateFile(dbpath)
+		file, err := os.Create(dbpath)
 		if err != nil {
 			logger.Fatal("Failed to create database", err)
 		}
+		defer file.Close()
 		logger.Info("Database created")
 
 		db, err := sql.Open("sqlite3", dbpath)

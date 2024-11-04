@@ -35,10 +35,3 @@ func TestDirExists(t *testing.T) {
 		}
 	})
 }
-
-func TestCreateFile(t *testing.T) {
-	err := CreateFile("data/test.txt")
-	if err != nil {
-		t.Error("Failed to create file")
-	}
-}

@@ -31,4 +31,20 @@ func init() {
 			logger.Fatal("Failed to check for data directory", err)
 		}
 	}
+
+	logger.Info("Checking for secrets directory...")
+	_, err = os.Stat(SecretsDir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			logger.Warn("Secrets directory does not exist, creating...")
+
+			err := os.Mkdir(SecretsDir, 0755)
+			if err != nil {
+				logger.Fatal("Failed to create secrets directory", err)
+			}
+			logger.Info("Secrets directory created")
+		} else {
+			logger.Fatal("Failed to check for secrets directory", err)
+		}
+	}
 }
