@@ -44,6 +44,7 @@ function Register() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body:
         nameRef.current !== null
           ? JSON.stringify({
