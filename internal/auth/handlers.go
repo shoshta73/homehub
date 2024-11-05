@@ -120,6 +120,8 @@ func register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	setCookie(w, generateToken(u))
+
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -156,7 +158,7 @@ func loginWithEmail(w http.ResponseWriter, r *http.Request) {
 	logger.Info("Request body checked")
 
 	logger.Info("Getting user by email")
-	user, err := user.GetUserByEmail(body.Email)
+	u, err := user.GetUserByEmail(body.Email)
 	if err != nil {
 		logger.Error("Failed to get user by email", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -164,13 +166,15 @@ func loginWithEmail(w http.ResponseWriter, r *http.Request) {
 	}
 	logger.Info("Got User")
 
-	if !user.VerifyPassword(body.Password) {
+	if !u.VerifyPassword(body.Password) {
 		logger.Error("Password does not match")
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
 	logger.Info("User logged in")
+
+	setCookie(w, generateToken(u))
 
 	w.WriteHeader(http.StatusOK)
 }

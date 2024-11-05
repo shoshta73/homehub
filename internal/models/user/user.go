@@ -48,7 +48,7 @@ func CreateUser(username, email, password string, optionals map[string]string) *
 
 	user.Username = username
 	user.Email = email
-	log.Info("Encrypting password")
+	logger.Info("Encrypting password")
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
