@@ -8,12 +8,14 @@ import (
 	"time"
 )
 
-func setCookie(w http.ResponseWriter, token string) {
-	http.SetCookie(w, &http.Cookie{
+func getCookie(token string) *http.Cookie {
+	return &http.Cookie{
 		Name:     "token",
 		Value:    token,
 		HttpOnly: true,
+		Secure:   true,
 		Path:     "/",
 		Expires:  time.Now().Add(time.Hour * 24 * 3),
-	})
+		SameSite: http.SameSiteNoneMode,
+	}
 }
