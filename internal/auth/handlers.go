@@ -15,6 +15,7 @@ func Routes() chi.Router {
 
 	r.Post("/register", register)
 	r.Post("/login", loginWithEmail)
+	r.Post("/validate", validate)
 
 	return r
 }
@@ -120,7 +121,10 @@ func register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	setCookie(w, generateToken(u))
+	tkn := generateToken(u)
+	cookie := getCookie(tkn)
+	logger.Info(cookie)
+	http.SetCookie(w, cookie)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -174,7 +178,31 @@ func loginWithEmail(w http.ResponseWriter, r *http.Request) {
 
 	logger.Info("User logged in")
 
-	setCookie(w, generateToken(u))
+	tkn := generateToken(u)
+	cookie := getCookie(tkn)
+	logger.Info(cookie)
+	http.SetCookie(w, cookie)
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func validate(w http.ResponseWriter, r *http.Request) {
+	for _, cookie := range r.Cookies() {
+		logger.Info("Cookie: " + cookie.Name)
+	}
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		logger.Error("Failed to get token from cookie: " + err.Error())
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	if !validateToken(cookie.Value) {
+		logger.Error("Token is invalid")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 }

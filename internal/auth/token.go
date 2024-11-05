@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -12,6 +13,27 @@ type userClaims struct {
 	Username string `json:"username"`
 	Id       string `json:"id"`
 	jwt.RegisteredClaims
+}
+
+func (c *userClaims) Valid() error {
+	e, err := user.UsernameExists(c.Username)
+	if err != nil {
+		return err
+	}
+	if !e {
+		return errors.New("username does not exist")
+	}
+
+	e, err = user.IdExists(c.Id)
+	if err != nil {
+		return err
+	}
+
+	if !e {
+		return errors.New("id does not exist")
+	}
+
+	return nil
 }
 
 func generateToken(user *user.User) string {
@@ -36,4 +58,22 @@ func generateToken(user *user.User) string {
 	}
 
 	return tokenString
+}
+
+func validateToken(tokenString string) bool {
+	token, err := jwt.ParseWithClaims(tokenString, &userClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+
+	_, ok := token.Claims.(*userClaims)
+	if !token.Valid || !ok {
+		return false
+	}
+
+	if err != nil {
+		logger.Error("Failed to parse token", err)
+		return false
+	}
+
+	return true
 }
