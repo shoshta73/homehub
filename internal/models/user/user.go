@@ -91,6 +91,10 @@ func EmailExists(email string) (bool, error) {
 	return database.GetEngine().Get(&User{Email: email})
 }
 
+func IdExists(id string) (bool, error) {
+	return database.GetEngine().Get(&User{ID: id})
+}
+
 func GetUserByEmail(email string) (*User, error) {
 	user := &User{}
 	_, err := database.GetEngine().Where("email = ?", email).Get(user)
