@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { baseUrl } from "../../helpers/api";
 
 function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const validate = async () => {
@@ -22,8 +23,9 @@ function Home() {
   return (
     <div>
       <div>
-        <button onClick={() => navigate("/pastebin")}>Pastebin</button>
+        <button onClick={() => navigate("/home/pastebin")}>Pastebin</button>
       </div>
+      <div>{location.pathname === "/home" ? <>Home View</> : <Outlet />}</div>
     </div>
   );
 }

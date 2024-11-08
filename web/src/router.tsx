@@ -23,6 +23,21 @@ const router = createBrowserRouter([
       {
         path: "/home",
         element: <Home />,
+        children: [
+          {
+            path: "pastebin",
+            children: [
+              {
+                index: true,
+                element: <>Pastebin</>,
+              },
+              {
+                path: "create",
+                element: <>Pastebin Create</>,
+              },
+            ],
+          },
+        ],
       },
       {
         path: "*",
