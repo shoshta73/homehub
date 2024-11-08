@@ -9,9 +9,14 @@ import (
 	"github.com/shoshta73/homehub/internal/models/user"
 )
 
+type UserClaims struct {
+	Username    string `json:"username"`
+	Id          string `json:"id"`
+	Permissions uint8  `json:"permissions"`
+}
+
 type userClaims struct {
-	Username string `json:"username"`
-	Id       string `json:"id"`
+	UserClaims
 	jwt.RegisteredClaims
 }
 
@@ -29,6 +34,10 @@ func (c *userClaims) Valid() error {
 		return err
 	}
 
+	if c.Permissions < 1 {
+		return errors.New("invalid permissions")
+	}
+
 	if !e {
 		return errors.New("id does not exist")
 	}
@@ -40,8 +49,11 @@ func generateToken(user *user.User) string {
 	tn := time.Now()
 
 	claims := userClaims{
-		Username: user.Username,
-		Id:       user.ID,
+		UserClaims: UserClaims{
+			Username:    user.Username,
+			Id:          user.ID,
+			Permissions: user.Permissions,
+		},
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 3)),
 			IssuedAt:  jwt.NewNumericDate(tn),
@@ -58,6 +70,22 @@ func generateToken(user *user.User) string {
 	}
 
 	return tokenString
+}
+func extractClaims(tokenString string) (*userClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &userClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return jwtKey, nil
+	})
+
+	c, ok := token.Claims.(*userClaims)
+	if !token.Valid || !ok {
+		return nil, errors.New("invalid token")
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
 }
 
 func validateToken(tokenString string) bool {
@@ -76,4 +104,14 @@ func validateToken(tokenString string) bool {
 	}
 
 	return true
+}
+
+func GetClaims(tokenString string) (*UserClaims, error) {
+	c, err := extractClaims(tokenString)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &c.UserClaims, nil
 }

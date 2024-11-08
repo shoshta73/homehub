@@ -104,14 +104,20 @@ func register(w http.ResponseWriter, r *http.Request) {
 	logger.Info("Email does not exist")
 
 	logger.Info("Registering user")
-	var u *user.User
 
+	var u *user.User
 	if body.Name == "" {
-		u = user.CreateUser(body.Username, body.Email, body.Password, map[string]string{})
+		u, err = user.CreateUser(body.Username, body.Email, body.Password, map[string]string{})
 	} else {
-		u = user.CreateUser(body.Username, body.Email, body.Password, map[string]string{
+		u, err = user.CreateUser(body.Username, body.Email, body.Password, map[string]string{
 			"name": body.Name,
 		})
+	}
+
+	if err != nil {
+		logger.Error("Failed to create user", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	err = insertUserFunc(u)
@@ -123,7 +129,6 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 	tkn := generateToken(u)
 	cookie := getCookie(tkn)
-	logger.Info(cookie)
 	http.SetCookie(w, cookie)
 
 	w.WriteHeader(http.StatusOK)
@@ -180,7 +185,6 @@ func loginWithEmail(w http.ResponseWriter, r *http.Request) {
 
 	tkn := generateToken(u)
 	cookie := getCookie(tkn)
-	logger.Info(cookie)
 	http.SetCookie(w, cookie)
 
 	w.WriteHeader(http.StatusOK)

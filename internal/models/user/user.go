@@ -23,22 +23,28 @@ func init() {
 	logger.Info("User model synced")
 }
 
+const (
+	admin_PERMISSIONS uint8 = 1 << iota
+	user_PERMISSIONS
+)
+
 type User struct {
-	ID        string `xorm:"pk 'id'"`
-	Username  string `xorm:"unique"`
-	Email     string `xorm:"unique"`
-	Password  string
-	Name      string
-	Avatar    string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          string `xorm:"pk 'id'"`
+	Username    string `xorm:"unique"`
+	Email       string `xorm:"unique"`
+	Password    string
+	Name        string
+	Avatar      string
+	Permissions uint8
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 func (user *User) VerifyPassword(pass string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
 }
 
-func CreateUser(username, email, password string, optionals map[string]string) *User {
+func CreateUser(username, email, password string, optionals map[string]string) (*User, error) {
 	logger.Info("Creating user")
 	user := &User{}
 
@@ -52,8 +58,7 @@ func CreateUser(username, email, password string, optionals map[string]string) *
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		logger.Error("Failed to hash password", err)
-		return nil
+		return nil, err
 	}
 	user.Password = string(hash)
 
@@ -69,8 +74,22 @@ func CreateUser(username, email, password string, optionals map[string]string) *
 	user.CreatedAt = tn
 	user.UpdatedAt = tn
 
+	count, err := database.GetEngine().Count(&User{})
+	if err != nil {
+		logger.Error("Failed to get count", err)
+		return nil, err
+	}
+
+	if count == 0 {
+		logger.Info("Setting admin permissions to the user")
+		user.Permissions = admin_PERMISSIONS | user_PERMISSIONS
+	} else {
+		logger.Info("Setting user permissions to the user")
+		user.Permissions = user_PERMISSIONS
+	}
+
 	logger.Info("User created")
-	return user
+	return user, nil
 }
 
 func InsertUser(user *User) error {
