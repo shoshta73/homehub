@@ -14,7 +14,7 @@ import (
 var logger = log.New(os.Stderr)
 
 func init() {
-	logger.SetPrefix("user")
+	logger.SetPrefix("paste")
 
 	logger.Info("Syncing paste model")
 	err := database.GetEngine().Sync(&Paste{})
@@ -96,4 +96,10 @@ func Insert(paste *Paste) error {
 	}
 	logger.Info("Inserted paste")
 	return nil
+}
+
+func CreatedCount(userId string) (int64, error) {
+	logger.Info("Getting created pastes for user", "id", userId)
+
+	return database.GetEngine().Where("owner_id = ?", userId).Count(&Paste{})
 }
