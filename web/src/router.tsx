@@ -3,6 +3,8 @@ import App from "./App";
 import RegisterView from "./views/RegisterView";
 import LoginView from "./views/LoginView";
 import Home from "./views/user/Home";
+import Root from "./views/user/pastebin/Root.tsx";
+import Create from "./views/user/pastebin/Create.tsx";
 
 const router = createBrowserRouter([
   {
@@ -29,11 +31,11 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <>Pastebin</>,
+                element: <Root/>,
               },
               {
                 path: "create",
-                element: <>Pastebin Create</>,
+                element: <Create/>,
               },
             ],
           },
