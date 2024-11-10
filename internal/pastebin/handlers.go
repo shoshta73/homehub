@@ -7,12 +7,14 @@ import (
 	"github.com/shoshta73/homehub/internal/models/paste"
 	"github.com/shoshta73/homehub/internal/models/user"
 	"net/http"
+	"strconv"
 )
 
 func Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Post("/create", create)
+	r.Get("/created/count", createdCount)
 
 	return r
 }
@@ -89,4 +91,45 @@ func create(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(np.ID))
+}
+
+func createdCount(w http.ResponseWriter, r *http.Request) {
+	logger.Info("Checking request")
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		logger.Error("Cookie not found")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	uc, err := auth.GetClaims(cookie.Value)
+	if err != nil {
+		logger.Error("Unable to extract claims", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	u, err := user.GetUserById(uc.Id)
+	if err != nil {
+		logger.Error("Unable to retrieve user", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if !u.HasUserPermission() {
+		logger.Warn("User does not have permission", "id", u.ID)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	count, err := paste.CreatedCount(u.ID)
+	if err != nil {
+		logger.Error("Error getting created count", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(strconv.FormatInt(count, 10)))
 }
