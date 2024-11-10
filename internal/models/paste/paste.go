@@ -40,6 +40,28 @@ func (paste *Paste) SetOwnerId(id string) {
 	paste.OwnerID = id
 }
 
+func HasTitle(userId, title string) bool {
+	var pastes []Paste
+	var pastesMap map[string]string
+
+	pastes = []Paste{}
+	pastesMap = map[string]string{}
+
+	err := database.GetEngine().Where("owner_id = ?", userId).Find(&pastes)
+	if err != nil {
+		logger.Error("Error getting pastes", err)
+		return false
+	}
+
+	for _, paste := range pastes {
+		pastesMap[paste.Title] = paste.ID
+	}
+
+	_, exists := pastesMap[title]
+
+	return exists
+}
+
 func Create(title, content string) (*Paste, error) {
 	if title == "" {
 		return nil, errors.New("title is required")
