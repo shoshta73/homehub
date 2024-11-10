@@ -36,6 +36,10 @@ type Paste struct {
 	UpdatedAt  time.Time
 }
 
+func (paste *Paste) SetOwnerId(id string) {
+	paste.OwnerID = id
+}
+
 func Create(title, content string) (*Paste, error) {
 	if title == "" {
 		return nil, errors.New("title is required")
