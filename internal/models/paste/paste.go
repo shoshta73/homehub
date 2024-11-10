@@ -87,3 +87,13 @@ func Create(title, content string) (*Paste, error) {
 
 	return paste, nil
 }
+
+func Insert(paste *Paste) error {
+	logger.Info("Inserting paste")
+	_, err := database.GetEngine().Insert(paste)
+	if err != nil {
+		return err
+	}
+	logger.Info("Inserted paste")
+	return nil
+}
