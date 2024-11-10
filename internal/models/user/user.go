@@ -15,7 +15,7 @@ var logger = log.New(os.Stderr)
 func init() {
 	logger.SetPrefix("user")
 
-	logger.Info("Syncing user mode")
+	logger.Info("Syncing user model")
 	err := database.GetEngine().Sync(&User{})
 	if err != nil {
 		logger.Fatal("Failed to sync user model", err)
@@ -42,6 +42,10 @@ type User struct {
 
 func (user *User) VerifyPassword(pass string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) == nil
+}
+
+func (user *User) HasUserPermission() bool {
+	return user.Permissions&user_PERMISSIONS == user_PERMISSIONS
 }
 
 func CreateUser(username, email, password string, optionals map[string]string) (*User, error) {
@@ -117,6 +121,16 @@ func IdExists(id string) (bool, error) {
 func GetUserByEmail(email string) (*User, error) {
 	user := &User{}
 	_, err := database.GetEngine().Where("email = ?", email).Get(user)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func GetUserById(id string) (*User, error) {
+	user := &User{}
+	_, err := database.GetEngine().Where("id = ?", id).Get(user)
 	if err != nil {
 		return user, err
 	}
