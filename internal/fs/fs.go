@@ -2,6 +2,7 @@ package fs
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/charmbracelet/log"
 )
@@ -10,6 +11,7 @@ var logger = log.New(os.Stderr)
 
 var DataDir = "data"
 var SecretsDir = "secrets"
+var PastesDir = filepath.Join(DataDir, "pastes")
 
 func FileExists(path string) bool {
 	info, err := os.Stat(path)
