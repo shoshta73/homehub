@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/cors"
 
 	"github.com/shoshta73/homehub/internal/auth"
+	"github.com/shoshta73/homehub/internal/pastebin"
 )
 
 func main() {
@@ -22,6 +23,7 @@ func main() {
 	})
 
 	r.Mount("/auth", auth.Routes())
+	r.Mount("/pastebin", pastebin.Routes())
 
 	http.ListenAndServe(":3000", r)
 	http.ListenAndServeTLS(":3001", "cert.pem", "key.pem", r)
