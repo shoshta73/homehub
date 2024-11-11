@@ -194,12 +194,12 @@ func created(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p := make([]Paste, len(pastes))
-	for idx, paste := range pastes {
+	for idx, pst := range pastes {
 		p[idx] = Paste{
-			ID:      paste.ID,
-			Title:   paste.Title,
-			Created: paste.CreatedAt,
-			Updated: paste.UpdatedAt,
+			ID:      pst.ID,
+			Title:   pst.Title,
+			Created: pst.CreatedAt,
+			Updated: pst.UpdatedAt,
 		}
 	}
 
