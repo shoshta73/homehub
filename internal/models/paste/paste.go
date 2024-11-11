@@ -103,3 +103,18 @@ func CreatedCount(userId string) (int64, error) {
 
 	return database.GetEngine().Where("owner_id = ?", userId).Count(&Paste{})
 }
+
+func GetCreatedPastes(userId string) ([]Paste, error) {
+	logger.Info("Getting pastes created by user", "id", userId)
+
+	var pastes []Paste
+	pastes = []Paste{}
+
+	err := database.GetEngine().Where("owner_id = ?", userId).Find(&pastes)
+	if err != nil {
+		logger.Error("Error getting pastes", err)
+		return nil, err
+	}
+
+	return pastes, nil
+}
