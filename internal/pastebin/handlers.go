@@ -8,12 +8,21 @@ import (
 	"github.com/shoshta73/homehub/internal/models/user"
 	"net/http"
 	"strconv"
+	"time"
 )
+
+type Paste struct {
+	ID      string    `json:"id"`
+	Title   string    `json:"title"`
+	Created time.Time `json:"created"`
+	Updated time.Time `json:"updated"`
+}
 
 func Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Post("/create", create)
+	r.Get("/created/all", created)
 	r.Get("/created/count", createdCount)
 
 	return r
@@ -132,4 +141,79 @@ func createdCount(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(strconv.FormatInt(count, 10)))
+}
+
+func created(w http.ResponseWriter, r *http.Request) {
+	logger.Info("Checking request")
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		logger.Error("Cookie not found")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	uc, err := auth.GetClaims(cookie.Value)
+	if err != nil {
+		logger.Error("Unable to extract claims", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	u, err := user.GetUserById(uc.Id)
+	if err != nil {
+		logger.Error("Unable to retrieve user", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if !u.HasUserPermission() {
+		logger.Warn("User does not have permission", "id", u.ID)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	var resp struct {
+		Pastes []Paste `json:"pastes"`
+	}
+
+	pastes, err := paste.GetCreatedPastes(u.ID)
+	if err != nil {
+		logger.Error("Error occurred getting pastes", err)
+
+		resp.Pastes = []Paste{}
+
+		b, err := json.Marshal(resp)
+		if err != nil {
+			logger.Error("Unable to marshal pastes", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(b)
+	}
+
+	p := make([]Paste, len(pastes))
+	for idx, paste := range pastes {
+		p[idx] = Paste{
+			ID:      paste.ID,
+			Title:   paste.Title,
+			Created: paste.CreatedAt,
+			Updated: paste.UpdatedAt,
+		}
+	}
+
+	resp.Pastes = p
+
+	b, err := json.Marshal(resp)
+	if err != nil {
+		logger.Error("Unable to marshal pastes", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	logger.Info("Successful", "response", resp)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
 }
