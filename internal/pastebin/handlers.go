@@ -16,6 +16,7 @@ type Paste struct {
 	Title   string    `json:"title"`
 	Created time.Time `json:"created"`
 	Updated time.Time `json:"updated"`
+	Content string    `json:"content,omitempty"`
 }
 
 func Routes() chi.Router {
@@ -24,6 +25,7 @@ func Routes() chi.Router {
 	r.Post("/create", create)
 	r.Get("/created/all", created)
 	r.Get("/created/count", createdCount)
+	r.Get("/paste/{id}", getPaste)
 
 	return r
 }
@@ -213,6 +215,70 @@ func created(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logger.Info("Successful", "response", resp)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
+}
+
+func getPaste(w http.ResponseWriter, r *http.Request) {
+	logger.Info("Checking request")
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		logger.Error("Cookie not found")
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	uc, err := auth.GetClaims(cookie.Value)
+	if err != nil {
+		logger.Error("Unable to extract claims", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	u, err := user.GetUserById(uc.Id)
+	if err != nil {
+		logger.Error("Unable to retrieve user", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if !u.HasUserPermission() {
+		logger.Warn("User does not have permission", "id", u.ID)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	id := chi.URLParam(r, "id")
+
+	pst, err := paste.GetById(id)
+	if err != nil {
+		logger.Error("Error getting paste", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if pst.OwnerID != u.ID {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	p := Paste{
+		ID:      pst.ID,
+		Title:   pst.Title,
+		Created: pst.CreatedAt,
+		Updated: pst.UpdatedAt,
+		Content: pst.Content,
+	}
+	logger.Info("Successful", "paste", p)
+
+	b, err := json.Marshal(p)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Unable to marshal paste"))
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(b)
