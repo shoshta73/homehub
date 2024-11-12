@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/charmbracelet/log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -10,6 +12,12 @@ import (
 	"github.com/shoshta73/homehub/internal/auth"
 	"github.com/shoshta73/homehub/internal/pastebin"
 )
+
+var logger = log.New(os.Stderr)
+
+func init() {
+	logger.SetPrefix("Homehub")
+}
 
 func main() {
 	r := chi.NewRouter()
