@@ -12,6 +12,7 @@ var logger = log.New(os.Stderr)
 var DataDir = "data"
 var SecretsDir = "secrets"
 var PastesDir = filepath.Join(DataDir, "pastes")
+var ConfigDir = "config"
 
 func FileExists(path string) bool {
 	info, err := os.Stat(path)

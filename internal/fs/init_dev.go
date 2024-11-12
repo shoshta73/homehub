@@ -48,7 +48,7 @@ func init() {
 		}
 	}
 
-	logger.Info("Checking for pastes directory")
+	logger.Info("Checking for pastes directory...")
 	_, err = os.Stat(PastesDir)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -60,6 +60,21 @@ func init() {
 			logger.Info("Pastes directory created")
 		} else {
 			logger.Fatal("Failed to check for pastes directory", err)
+		}
+	}
+
+	logger.Info("Checking for config directory...")
+	_, err = os.Stat(ConfigDir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			logger.Warn("Config directory does not exist, creating...")
+			err := os.Mkdir(ConfigDir, 0755)
+			if err != nil {
+				logger.Fatal("Failed to create config directory", err)
+			}
+			logger.Info("Config directory created")
+		} else {
+			logger.Fatal("Failed to check for config directory", err)
 		}
 	}
 }
