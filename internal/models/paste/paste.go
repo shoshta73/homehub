@@ -118,3 +118,14 @@ func GetCreatedPastes(userId string) ([]Paste, error) {
 
 	return pastes, nil
 }
+
+func GetById(id string) (*Paste, error) {
+	paste := &Paste{}
+
+	_, err := database.GetEngine().Where("id = ?", id).Get(paste)
+	if err != nil {
+		return nil, err
+	}
+
+	return paste, nil
+}
